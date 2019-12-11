@@ -1,0 +1,8 @@
+langsung insert ke sim barang
+API di PTP
+Hold Release BC di custom Module
+UI Detail di Custom Module - Inspection
+			   - Hold Release
+Justifikasi Berat > ?
+QR Bisa Expired
+

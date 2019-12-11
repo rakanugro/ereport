@@ -1,0 +1,242 @@
+html{
+    background-color: #283a5a !important;
+    -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+      
+}
+
+.super-main{
+    height: 100vh !important;
+    width: 100%;
+}
+
+.fl-main-container{
+    padding:20px 80px 30px 80px;
+}
+
+.fl-header-margin{
+    padding:20px 0px 15px 0px;
+    background-color: #283a5a;
+}
+
+.fl-header{
+    font-size: 22px;
+    color: #fff;
+    margin-bottom:20px;
+    cursor: pointer;
+}
+
+.fl-menu-tool{
+    float: right;
+}
+
+.fl-menu-box{
+    cursor: pointer;
+    opacity:10 !important; 
+}
+
+.fl-logo{
+    height: 50px;
+}
+
+.fl-icon-menu{
+    height: 90%;
+    width: 90%;
+}
+
+.fl-title-logo{
+    top: 30 !important;
+}
+
+.fl-box-color1{
+    background-color: #2879ec !important;
+    color:#fff !important;
+}
+
+.fl-box-color2{
+    background-color: #0077c8 !important;
+    color:#fff !important;
+}
+
+.fl-box-color3{
+    background-color: #3077b8 !important;
+    color:#fff !important;
+}
+
+.fl-box-color4{
+    background-color: #094fb7 !important;
+    color:#fff !important;
+}
+
+.fl-box-color5{
+    background-color: #290076 !important;
+    color:#fff !important;
+}
+
+.fl-box-color6{
+    background-color: #f4b459 !important;
+    color:#fff !important;
+}
+
+.fl-box-color7{
+    background-color: #e9b959 !important;
+    color:#fff !important;
+}
+
+.fl-box-color8{
+    background-color: #f56f26 !important;
+    color:#fff !important;
+}
+
+.fl-box-color9{
+    background-color: #fcb01c !important;
+    color:#fff !important;
+}
+
+
+.fl-box-color10{
+    background-color: #1aa1a7 !important;
+    color:#fff !important;
+}
+
+.fl-box-color11{
+    background-color: #1a59da !important;
+    color:#fff !important;
+}
+
+.fl-box-color12{
+    background-color: #806bf6 !important;
+    color:#fff !important;
+}
+
+.fl-box-color13{
+    background-color: #0cb9ff !important;
+    color:#fff !important;
+}
+
+.fl-box-color14{
+    background-color: #feab08 !important;
+    color:#fff !important;
+}
+
+.fl-box-color15{
+    background-color: #e2202b !important;
+    color:#fff !important;
+}
+
+.fl-box-color16{
+    background-color: #9c2fae !important;
+    color:#fff !important;
+}
+
+.fl-box-color17{
+    background-color: #e9316f !important;
+    color:#fff !important;
+}
+
+.fl-box-colordisbled{
+    background-color: #535353 !important;
+    color:#fff !important;
+}
+
+
+
+.uk-card-title{
+    color:#fff !important;
+}
+
+.uk-card-body{
+    padding: 0 !important;
+}
+
+
+.fl-figure{
+    width: 100%;
+    padding: 10px;
+}
+
+
+
+.fl-figcaption{
+    z-index:50000
+}
+
+
+
+.fl-submenu{
+    text-align: center;
+    padding:10px 0px;
+    font-size: 12px;
+    background-color: #fff;
+}
+
+.fl-image-figure{
+    width: 100%;
+}
+
+
+
+[class*=" imghvr-"] figcaption, [class^="imghvr-"] figcaption{
+    padding: 0 !important;
+}
+
+
+.uk-modal-dialog{
+    width:850px !important;
+    border-radius: 10px;
+}
+
+.fl-icon{
+    height: 55px;
+    display: block;
+    cursor: pointer;
+}
+
+.fl-icon-title{
+    font-size: 12px;
+    color:#000;
+    cursor: pointer;
+}
+
+.fl-button{
+    border-radius: 4px !important;
+}
+
+.fl-button-circle{
+    border-radius: 10px !important;
+    background-color: #3db39e !important;
+}
+
+.fl-search{
+    float: right;
+}
+
+.fl-table{
+    background-color:#fff;
+    padding:20px;
+    margin-top:8px
+}
+
+.fl-table-head th{
+    font-weight: 700 !important;
+    color:#000 !important; 
+    background: #fff;
+}
+
+.fl-table-head-sm th{
+    font-weight: 700 !important;
+    color:#000 !important; 
+    background: #f1f1f1;
+}
+
+.fl-title-page{
+    background-color: #fff;
+    padding: 5px 20px;
+    border-radius:1px;
+}
+
+.fl-sop{
+    height:50vh;
+}

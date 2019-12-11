@@ -1,0 +1,376 @@
+.fl-logo{
+    height:50px;
+    width: 100px;
+}
+
+.li:hover{
+    box-shadow:rgba(0, 0, 0, 0.08) 0px 0px 80px 0px;
+    z-index: 1000;
+}
+
+.img-fit{
+    width:100%;height:100%;
+    object-fit:cover;
+    cursor: pointer;
+}
+
+.img-fit:hover{
+    height:100.5%;
+}
+
+.menu{
+    padding-right:30px;
+    font-weight: 500;
+    cursor: pointer; 
+    color: rgb(29, 28, 28);
+    z-index: 2000;
+}
+
+.menu:hover{
+    color: #fa9e2d;
+}
+
+.divHeader{
+    padding: 10px 30px 10px 50px;
+    text-align: left;
+    background-color:rgba(255, 255, 255, 0.90);
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+    z-index: 2000;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.08), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+}
+
+.uk-slider-items2{
+    min-height:50vh !important;
+}
+
+.uk-slider-items3{
+    min-height:100vh !important;
+}
+
+.uk-card-body2{
+    padding:20px 30px !important;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+}
+
+.uk-card-body3{
+    padding:10px 20px !important;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+    font-weight: 600;
+    background-color: #fa9e2d !important;
+    color:#fff !important;
+}
+
+.uk-nav-sub a{
+    padding: 10px 30px 10px 0px !important;
+}
+
+.container-slide{
+    width:100%;
+}
+
+.container-comment{
+    padding:10px;
+    margin:20px;
+    height:60vh;
+}
+
+.fl-card{
+    border-radius:10px;
+}
+
+.fl-title{
+    padding:10px 15px;
+    height:120px;
+    text-align:center;
+}
+
+.fl-title2{
+    height:180px;
+    text-align:center;
+}
+
+.fl-footer{
+    font-size:15px;
+    color:rgb(0, 0, 0);
+    padding:10px;
+    padding-right:50px; 
+    background-color:#f7f7f7;
+    bottom: 0;
+    position: fixed;
+    width: 100%;
+}
+
+.uk-nav-default > li > a{
+    color:rgb(97, 97, 97) !important;
+}
+
+.uk-nav-default > li > a:hover{
+    color:rgb(5, 80, 141) !important;
+}
+
+.fl-button-small{
+    border-radius: 8px !important;
+    background-color: #0b4fa4 !important;
+}
+
+.fl-button-search{
+    border-radius: 8px !important;
+    background-color: #ffa600 !important;
+}
+
+.fl-button{
+    width:95% !important;
+    border-radius: 8px !important;
+    background-color: #0b4fa4 !important;
+}
+
+
+.fl-button-box{
+    border-radius: 18px !important;
+    background-color: #ffffff !important;
+    color: #464646 !important;
+    font-weight: 600 !important;
+    margin-top: 20px !important;
+    font-variant: normal !important;
+}
+
+.fl-button-box-mini{
+    border-radius: 18px !important;
+    background-color: #ffffff !important;
+    color: #464646 !important;
+    font-weight: 600 !important;
+    margin-top: 20px !important;
+    font-variant: normal !important;
+    font-size: 12px !important;
+}
+
+.fl-button-box:hover{
+    color: #000000 !important;
+    background-color: #ececec !important;
+}
+
+
+.fl-button-box-green{
+    border-radius: 18px !important;
+    background-color: #3db39e !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    margin-top: 20px !important;
+    font-variant: normal !important;
+    bottom: 0 !important;
+    border:none !important; 
+}
+
+.fl-button-box-green:hover{
+    color: #ffffff !important;
+    background-color: #3db39e !important;
+}
+
+.fl-box{
+    height:44vh;
+    text-align: center;
+}
+
+.fl-box1{
+    background-color: #feac56 !important;
+    color:#fff !important;
+}
+
+.fl-box2{
+    background-color: #ff982a !important;
+    color:#fff !important;
+}
+
+.fl-box3{
+    background-color: #fd8709 !important;
+    color:#fff !important;
+}
+
+.fl-box4{
+    background-color: #3b7fbb !important;
+    color:#fff !important;
+}
+
+.fl-box5{
+    background-color: #538bbd !important;
+    color:#fff !important;
+}
+
+.fl-box6{
+    background-color: #266ead !important;
+    color:#fff !important;
+}
+
+
+.divTitleBoxBold{
+    padding:0px 20px;
+    color:#575757 !important;
+    font-size: 20px;
+}
+
+
+.divTitleBox{
+    padding:0px 20px;
+    color: #fff;
+    font-size: 16px;
+}
+
+
+
+.detailSlide{
+    padding-top:75px
+}
+
+.searchInput{
+    width: 50% !important;
+    border-radius: 4px !important;
+    padding: 15px !important;
+}
+
+
+
+.tblSlide{
+    width: 100%;
+    height: 100%;
+}
+
+
+.tdSlide{
+    background: #fcbe4b;
+}
+
+.tdSlide1{
+    background: #ffb357;
+}
+
+
+.tdSlide2{
+    background: #faa742;
+}
+
+.tdSlide3{
+    background: #f5aa1e;
+}
+
+.tdSlide4{
+    background: #fcbe4b;
+}
+
+.tdSlide5{
+    background: #229ce2;
+}
+
+.tdSlide6{
+    background: #247eb3;
+}
+
+.tdSlide7{
+    background: #0d7bbb;
+}
+
+
+
+
+
+.tdSlideMr{
+    background: #26a69a;
+}
+
+.tdSlideMr1{
+    background: #5260b1;
+}
+
+.tdSlideMr2{
+    background: #5866b8;
+}
+
+.tdSlideMr3{
+    background: #4e5ba8;
+}
+
+.tdSlideMr4{
+    background: #5667c7;
+}
+
+.tdSlideMr5{
+    background: #586ad4;
+}
+
+.tdSlideMr6{
+    background: #5261b8;
+}
+
+.tdSlideMr7{
+    background: #00897b;
+}
+
+
+
+.tdSlideBoxSop{
+    background: #ffffff;
+    padding: 0px 0px;
+    color:#ffdf00 !important;
+}
+
+.tdSlideBoxSop1{
+    background: #ffffff;
+    padding: 0px 0px;
+    color:#ffdf00 !important;
+}
+
+.tdSlideBoxSop2{
+    background: #ffffff;
+    padding: 20px 30px;
+}
+
+.tdSlideBoxSop3{
+    background: #ffffff;
+    padding: 20px 30px;
+}
+
+.tdSlideBoxSop4{
+    background: #ffffff;
+    padding: 20px 30px;
+}
+
+.tdSlideBoxSop5{
+    background: #ffffff;
+    padding: 20px 30px;
+}
+
+.tdSlideBoxSop6{
+    background: #ffffff;
+    padding: 20px 30px;
+}
+
+.tdSlideBoxSop7{
+    background: #ffffff;
+    padding: 20px 30px;
+}
+
+.divBoxDetail{
+    border-right: #992424 1px solid;
+    border-bottom: #992424 1px solid;
+}
+
+/* .divBoxDetail:hover{
+    box-shadow: 0 4px 8px 0 rgba(92, 92, 92, 0.2), 0 6px 20px 0 rgba(92, 92, 92, 0.19) !important;
+    z-index: 1000;
+    cursor: pointer;
+} */
+
+
+.submenu{
+    height: 250px;
+    display: none;
+    z-index: 3000;
+}
+
+.detail-submenu{
+    font-size: 13px;
+    color:#000000;
+    padding: 10px;
+    cursor: pointer;
+}
