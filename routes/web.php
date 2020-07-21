@@ -63,6 +63,12 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/sop_upload/{id}', 'SopController@upload_sop');
     Route::get('/wi_upload/{id}', 'WiController@upload_wi');
     Route::get('/form_file_upload/{id}', 'FormFileController@upload_form_file');
+    Route::get('/sop/inactive/{id}', 'SopController@sopinactive');
+    Route::get('/sop/edit/{id}', 'SopController@edit');
+    Route::post('/update', 'SopController@update');
+    Route::get('/sop_check', 'SopController@sop_check');
+
+    
 
     Route::post('/sop_upload', 'SopController@add_post');
     Route::get('/sop_download/{id}', 'SopController@download');
@@ -110,8 +116,10 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/txsarmut/txsarmut_kembalikan', 'SarmutController@txsarmut_kembalikan');
     Route::get('/txsarmutfilter/{id}', 'SarmutController@filter_txsarmut');
     Route::post('/txsarmut/export_excel', 'SarmutController@excel_export');
+    Route::get('/txsarmut/deletefile/{id}', 'SarmutController@delete_file');
 
     Route::post('/input_sarmut', 'SarmutController@form_input_sarmut'); 
+    Route::get('/input_sarmut_upload', 'SarmutController@form_input_sarmut_upload');
 
 
 
@@ -323,25 +331,89 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/ptkakfilter/{id}', 'PTKAKController@filter_ptkak');
     Route::get('/ptkak/master_form_reportptkak/{id}', 'PTKAKController@print_report_ptkak');
 
+
     //change password
     Route::post('/account/user_changepass', 'HomeController@save_edit_changepass');
 
     //Reportdata
-    Route::get('/listexportdata', 'ExportDataController@list_export_data');
+    Route::get('/listexportdata/{ReportType}', 'ExportDataController@list_export_data');
+    Route::get('/listexportmenu', 'ExportMenuController@list_export_menu');
     Route::post('/getgenerate', 'ExportDataController@getgenerate_piechart');
     Route::post('/getgenerateall', 'ExportDataController@getgenerate_piechartall');
     Route::post('/getgeneratebarchart', 'ExportDataController@getgenerate_barchart');
     Route::post('/getgeneratebarchartall', 'ExportDataController@getgenerate_barchartall');
     Route::post('/getgenerateptkak', 'ExportDataController@getgenerate_ptkak');
+    Route::post('/getsubdivptkak', 'ExportDataController@getsubdiv_ptkak');
     Route::post('/getgeneratesop', 'ExportDataController@getgenerate_sop');
     Route::get('/form_list_export_data_excel', 'ExportDataController@list_export_data_excel');
+    
+
+
+    //tampildataviatable
+    Route::post('/previewindikatorcabangpercabang', 'ExportDataController@previewindikatorcabangpercabangtabel');
+    Route::post('/previewindikatordivisiperdivisi', 'ExportDataController@previewindikatordivisiperdivisi');
 
     //ReportExcel
     Route::get('/exportexcelindicatorpusat/{gabung}','ExportDataController@generateExcelIndicatorPusat');
     Route::get('/exportexcelindicatorcabang/{gabung}','ExportDataController@generateExcelIndicatorCabang');
     Route::get('/exportexcelindicatorpusattercapai/{gabung}','ExportDataController@generateExcelIndicatorPusatTercapai');
-    Route::get('/exportexcelindicatorpusattidaktercapai/{gabung}','ExportDataController@generateExcelIndicatorPusatTidakTercapai');
+    Route::get('/exportexcelindicatorpusattidaktercapai/{gabung}','ExportDataController@generateExcelIndicatorCabangTidakTercapai');
+    Route::get('/exportexcelindicatortercapaicabang/{gabung}','ExportDataController@generateExcelIndicatorTercapaiCabang');
+    Route::get('/exportexcelindicatortidaktercapaicabang/{gabung}','ExportDataController@generateExcelIndicatorCabangTidakTercapai');
     Route::get('/exportexcelrealisasisasaranmutu/{gabung}','ExportDataController@generateExcelRealisasiSasaranMutu');
     Route::get('/exportexcelrealisasisasaranmutusampaidengan/{gabung}','ExportDataController@generateExcelRealisasiSasaranMutuSampaiDengan');
     Route::get('/exportexcelketepatanlaporan/{thn}','ExportDataController@generateExcelKetepatanLaporan');
+    Route::get('/exportexcelStatSarmut/{thn}','ExportDataController@generateExcelStatSarmut');
+    Route::get('/exportexcelcabangpercabang/{gabung}','ExportDataController@generateExcelCabangPerCabang');
+    Route::get('/exportexceldivisiperdivisi/{gabung}','ExportDataController@generateExcelDivisiPerDivisi');
+    Route::get('/exportexcelcabangbanten/{gabung}','ExportDataController@generateExcelCabangBanten');
+    Route::get('/exportexcelcabangjambi/{gabung}','ExportDataController@generateExcelCabangJambi');
+    Route::get('/exportexcelcabangtanjungpriok/{gabung}','ExportDataController@generateExcelCabangTanjungPriok');
+    Route::get('/exportexcelcabangbengkulu/{gabung}','ExportDataController@generateExcelCabangBengkulu');
+    Route::get('/exportexcelcabangpanjang/{gabung}','ExportDataController@generateExcelCabangPanjang');
+    Route::get('/exportexcelcabangcirebon/{gabung}','ExportDataController@generateExcelCabangCirebon');
+    Route::get('/exportexcelcabangpalembang/{gabung}','ExportDataController@generateExcelCabangPalembang');
+    Route::get('/exportexcelcabangtelukbayur/{gabung}','ExportDataController@generateExcelCabangTelukBayur');
+    Route::get('/exportexcelcabangpangkalbalam/{gabung}','ExportDataController@generateExcelCabangPangkalBalam');
+    Route::get('/exportexcelcabangtanjungpandan/{gabung}','ExportDataController@generateExcelCabangTanjungPandan');
+    Route::get('/exportexcelkpipusat/{gabung}','ExportDataController@generateexcelindikatorkpipusat');
+    Route::get('/exportexcelkpicabang/{gabung}','ExportDataController@generateexcelindikatorkpicabang');
+    Route::get('/exportexcelKinerjaCabang/{gabung}','ExportDataController@generateexcelKinerjaCabang');
+
+    //Preview
+    Route::post('/previewIndicatorPusat','ExportDataController@previewIndicatorPusat');
+    Route::post('/previewIndicatorTercapaiPusat','ExportDataController@previewIndicatorTercapaiPusat');
+    Route::post('/previewSasaranMutu','ExportDataController@previewSasaranMutu');
+    Route::post('/previewSasaranMutuSD','ExportDataController@previewSasaranMutuSD');
+    Route::post('/previewindikatorcabang','ExportDataController@previewindikatorcabang');
+    Route::post('/previewindikatorcabangpercabang','ExportDataController@previewindikatorcabangpercabang');
+    Route::post('/previewindikatorpusat','ExportDataController@previewindikatorpusat');
+    Route::post('/previewtercapaipusat','ExportDataController@previewtercapaipusat');
+    Route::post('/previewtidaktercapaipusat','ExportDataController@previewtidaktercapaipusat');
+    Route::post('/previewtercapaicabang','ExportDataController@previewtercapaicabang');
+    Route::post('/previewtidaktercapaicabang','ExportDataController@previewtidaktercapaicabang');
+    Route::post('/previewketepatanlaporan','ExportDataController@previewketepatanlaporan');
+    Route::post('/previewStatSarmut','ExportDataController@previewStatSarmut');
+    Route::post('/previewdetailkategori','ExportDataController@previewdetailkategori');
+    Route::post('/previewdetailkategorisd','ExportDataController@previewdetailkategorisd');
+    Route::post('/previewdetailsop','ExportDataController@previewdetailsop');
+    Route::post('/previewdetailptkak','ExportDataController@previewdetailptkak');
+    Route::post('/previewdetailstatusptkak','ExportDataController@previewdetailstatusptkak');
+    Route::get('/previewindikatorkpipusat','ExportDataController@previewindikatorkpipusat');
+    Route::get('/previewindikatorkpicabang','ExportDataController@previewindikatorkpicabang');
+
+
+ 
+
+    //test
+    Route::get('testemail', function () {
+        return view('email.contoh');
+    });
+    
+
+
+
+
+
+
 });

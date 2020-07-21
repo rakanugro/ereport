@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>PT. Pelabuhan Tanjung Priuk</title>
+<title>PT. Pelabuhan Tanjung Priok</title>
 
 <link href="templateslide/assets/css/style.css" rel="stylesheet" type="text/css">
 <link href="templateslide/assets/uikit/css/uikit.css" rel="stylesheet" type="text/css">

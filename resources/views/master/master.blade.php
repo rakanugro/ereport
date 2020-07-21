@@ -32,7 +32,7 @@
 			<img src="templateslide/assets/img/logo/ptpwhite.png" class="fl-logo">
 			
 			<span class="fl-title-logo">
-				E-Reporting PT. Pelabuhan Tanjung Priok	
+					E-Report PT. Pelabuhan Tanjung Priok	
 			</span>
 
 			<span class="fl-menu-tool">

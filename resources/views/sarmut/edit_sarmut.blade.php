@@ -1,8 +1,8 @@
-}<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>PT. Pelabuhan Tanjung Priuk</title>
+<title>PT. Pelabuhan Tanjung Priok</title>
 
 <link href="{{ URL::asset('templateslide/assets/css/style.css') }}" rel="stylesheet" type="text/css">
 <link href="{{ URL::asset('templateslide/assets/css/imagehover/imagehover.min.css') }}" rel="stylesheet" type="text/css">
@@ -54,12 +54,15 @@
 				<img src="{{ URL::asset('templateslide/assets/img/logo/ptpwhite.png') }}" class="fl-logo" onclick="location.href = '{{ url('dashboard')}}'">
 				
 				<span class="fl-title-logo">
-					E-Reporting PT. Pelabuhan Tanjung Priok	
+					E-Report PT. Pelabuhan Tanjung Priok	
 				</span>
-
 				<span class="fl-menu-tool">
+					<img src="{{ URL::asset('templateslide/assets/img/logo/Logo e-Report.png') }}" class="fl-logo">
 					<input type="button" class="uk-button uk-button-primary fl-button" value="menu" onclick="location.href = '{{ url('dashboard')}}'">
 				</span>
+				<!-- <span class="fl-menu-tool">
+					<input type="button" class="uk-button uk-button-primary fl-button" value="menu" onclick="location.href = '{{ url('dashboard')}}'">
+				</span> -->
 			</div>	
 		</div>
 
@@ -73,20 +76,41 @@
 				<span style="float:right;margin-top:15px; color: red;">
 					Note* (Kalau keterangan dipilih, maka realisasi tidak dapat diubah)
 				</span>
+				<div class="form-group m-form__group row">
+				</div>
+				
+				
+
+				<form id="form_editsarmut" action="/txsarmut/sarmut_edit" method="POST" enctype="multipart/form-data">	
+				@if($isdeleted == '0')
+				<div class="col-lg-6" style="margin-bottom: 15px;">
+					<h6><a href="{{ url::to('/') }}/{{ $getfile }}" download data-toggle="tooltip" title="Download {{ $getfile }}">{{ $getfilename }}</a></h6>
+					<button class="uk-button-danger fl-button" id="hapusfile" type="button">
+						<i class="fa fa-minus"></i>&nbsp;Hapus file
+					</button>
+					<input type="hidden" id="idfile" name="idfile" value='{{ $id }}'>
+					<input type="hidden" id="file" name="file" value='{{ $getfile }}'>
+				</div>
+				@else
+				<div class="col-lg-8"  style="margin-bottom: 15px;">
+						<label class="custom-file">
+							<input type="file" id="file" name="file" class="btn btn-submit" onchange="return fileValidation(this);" style="margin-bottom: 10px;">
+							<!-- <div class="col-sm-12">max size file 5MB & file format .jpeg/.jpg/.png/.pdf</div> -->
+							<!-- <span class="custom-file-control">Choose File...</span> -->
+						</label>
+					</div>
+				@endif
+				</div>
 			</div>
 			
-		<form id="form_editsarmut" action="/txsarmut/sarmut_edit" method="POST">	
+			
 			<div class="col-md-12 fl-table">
 				{{ csrf_field() }}
 				<input type="hidden" name="header_sarmut_id" id="header_sarmut_id" value="{{ $header_sarmut_id }}">
 				<input type="hidden" name="years" id="years" value="{{ $year }}"><br>
 				<input type="hidden" name="months" id="months" value="{{ $month }}"><br>
-					
-					
-				
 				<div class="uk-overflow-auto">
-				
-					<table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
+					<table class="uk-table uk-table-hover uk-table-middle uk-table-divider" style="width: 100%;">
 						<thead>
 							<tr class="fl-table-head">
 								<th width="5%"></th>
@@ -96,10 +120,10 @@
 								<th width="5%">Satuan</th>
 								<th width="5%">Polaritas</th>
 								<th width="5%">Target</th>
-								<th width="15%">Realisasi</th>
-								<th width="15%">Keterangan</th>
-								<th width="15%">Alasan</th>
-								<th width="10%"></th>
+								<th width="10%">Realisasi</th>
+								<th style="text-align: center;" width="10%">Keterangan</th>
+								<th style="text-align: center;" width="10%">Alasan</th>
+								<!-- <th width="10%"></th> -->
 							</tr>
 						</thead>
 						<?php $i = 0 ?>
@@ -122,9 +146,9 @@
 									@endif
 								<td>
 									@if($data->INPUTABLE == "Y" )
-									<select style="width: 100% !important;" id="remark{{$i}}" class="form-control select2-list" name="remark[]" required="required" onchange="changetextbox('remark{{$i}}','actual{{$i}}')">
+									<select style="width: 100% !important;" id="remark{{$i}}" class="form-control select2-list" name="remark[]" required="required" onchange="changetextbox('remark{{$i}}','actual{{$i}}','alasan{{$i}}')">
 										<option value="-" {{ $sel_actual_list[$i]->KETERANGAN == "-" ? 'selected' : '' }}>--Keterangan--</option>
-										<option value="Tidak Ada Kegiatan" {{ $sel_actual_list[$i]->KETERANGAN == "Tidak Ada Kegiatan" ? 'selected' : '' }}>Tidak Ada Kegiatan</option>
+										<option value="Tidak Ada Kegiatan" {{ $sel_actual_list[$i]->KETERANGAN == "Tidak Ada Kegiatan" ? 'selected' : '' }}>Not Available</option>
 										<option value="Data Kurang" {{ $sel_actual_list[$i]->KETERANGAN == "Data Kurang" ? 'selected' : '' }}>Data Kurang</option>
 									</select>
 									@elseif( $data->INPUTABLE == "N" )
@@ -147,6 +171,14 @@
 										<option value="Menunggu Data Dari Bagian Lain" {{ $sel_actual_list[$i]->ALASAN == "Menunggu Data Dari Bagian Lain" ? 'selected' : '' }}>Menunggu Data Dari Bagian Lain</option>
 										<option value="Kegiatan Dibatalkan" {{ $sel_actual_list[$i]->ALASAN == "Kegiatan Dibatalkan" ? 'selected' : '' }}>Kegiatan Dibatalkan</option>
 										<option value="Kegiatan Diundur" {{ $sel_actual_list[$i]->ALASAN == "Kegiatan Diundur" ? 'selected' : '' }}>Kegiatan Diundur</option>
+
+										<option value="Proses Gagal / Di Ulang" {{ $sel_actual_list[$i]->ALASAN == "Proses Gagal / Di Ulang" ? 'selected' : '' }}>KProses Gagal / Di Ulang</option>
+										<option value="Anggaran Terbatas" {{ $sel_actual_list[$i]->ALASAN == "Anggaran Terbatas" ? 'selected' : '' }}>Anggaran Terbatas</option>
+										<option value="Belum Ada Kebijakan" {{ $sel_actual_list[$i]->ALASAN == "Belum Ada Kebijakan" ? 'selected' : '' }}>Belum Ada Kebijakan</option>
+										<option value="Menunggu Hasil Kajian" {{ $sel_actual_list[$i]->ALASAN == "Menunggu Hasil Kajian" ? 'selected' : '' }}>Menunggu Hasil Kajian</option>
+										<option value="Menunggu Proses SISKAKU Cabang IPC" {{ $sel_actual_list[$i]->ALASAN == "Menunggu Proses SISKAKU Cabang IPC" ? 'selected' : '' }}>Menunggu Proses SISKAKU Cabang IPC</option>
+										<option value="Kegiatan Belum Terjadwal" {{ $sel_actual_list[$i]->ALASAN == "Kegiatan Belum Terjadwal" ? 'selected' : '' }}>Kegiatan Belum Terjadwal</option>
+										<option value="Menunggu Verifikasi Bagian Lain" {{ $sel_actual_list[$i]->ALASAN == "Menunggu Verifikasi Bagian Lain" ? 'selected' : '' }}>Menunggu Verifikasi Bagian Lain</option>
 									</select>
 								</td>
 								<td></td>
@@ -216,7 +248,6 @@
 							</tr>
 						</tbody>
 					</table>
-					
 				</div>	
 			</div>
 		</form>
@@ -251,6 +282,36 @@
 
 <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script> -->
 <script type="text/javascript">
+
+	function fileValidation(file){
+		var fileInput = document.getElementById('file');
+		var filePath = fileInput.value;
+		var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif|\.pdf|\.xls|\.xlsx)$/i;
+		var FileSize = file.files[0].size / 15120 / 15120;
+		if(!allowedExtensions.exec(filePath) || FileSize > 15){
+			alert('file extension .jpeg/.jpg/.png/.pdf/.xls/.xlsx. size file max 15MB');
+			fileInput.value = '';
+			return false;
+
+		} 
+	}
+
+	$("#hapusfile").click(function(e){
+		e.preventDefault();
+
+		var id = $('#idfile').val();
+		$.ajax({
+			type:'GET',
+			url:('{{url('/txsarmut/deletefile')}}/')+id,
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			success:function(data){
+				location.reload(); 
+			}
+		});
+	});
+
     function showModal(){
 		UIkit.modal("#mymodal").show();
 	}
@@ -260,20 +321,23 @@
 		document.forms['form_apprsarmut'].submit();
     }
 
-    function changetextbox(a,b)
+     function changetextbox(a,b,z)
     {
     	var e = document.getElementById(a);
     	var c = e.options[e.selectedIndex].value;
-    	//alert(c);
+
     	if (c == "-") {
     		document.getElementById(b).readOnly = false;
     		document.getElementById(b).style.color = "black";
     		document.getElementById(b).style.backgroundColor = "white";
+    		//document.getElementById(z).disabled = false;
     	} 
     	else if(c == "Tidak Ada Kegiatan") {
     		document.getElementById(b).readOnly = true;
     		document.getElementById(b).style.color = "blue";
     		document.getElementById(b).value = "0";
+    		//document.getElementById(z).disabled = true;
+
     		// document.getElementById(b).style.backgroundColor = "gray";
     	}
     	else
@@ -281,6 +345,7 @@
     		document.getElementById(b).readOnly = true;
     		document.getElementById(b).style.color = "red";
     		document.getElementById(b).value = "0";
+    		//document.getElementById(z).disabled = false;
     		// document.getElementById(b).style.backgroundColor = "gray";
     	}
     }

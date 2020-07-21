@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>PT. Pelabuhan Tanjung Priuk</title>
+	<title>PT. Pelabuhan Tanjung Priok</title>
 
 	<link href="{{ URL::asset('templateslide/assets/css/style.css') }}" rel="stylesheet" type="text/css">
 	<link href="{{ URL::asset('templateslide/assets/css/imagehover/imagehover.min.css') }}" rel="stylesheet" type="text/css">
@@ -54,7 +54,7 @@ body{
 				<img src="{{ URL::asset('templateslide/assets/img/logo/ptpwhite.png') }}" class="fl-logo" onclick="location.href = '{{ url('dashboard')}}'">
 				
 				<span class="fl-title-logo">
-					E-Reporting PT. Pelabuhan Tanjung Priok	
+					E-Report PT. Pelabuhan Tanjung Priok	
 				</span>
 
 				<span class="fl-menu-tool">
@@ -91,7 +91,11 @@ body{
 							<b><label class="">
 								Revisi:
 							</label></b>
+							@if( Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU"|| Auth::user()->ACCESS == 'DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU' || Auth::user()->ACCESS == 'VP PENGENDALIAN KINERJA DAN JAMINAN MUTU')
 							<input type="text"  class="form-control m-input" name="revisi" id="revisi" placeholder="Input Revisi" required>
+							@else
+							<input type="text"  class="form-control m-input" name="revisi" id="revisi" placeholder="Input Revisi" readonly="">
+							@endif
 						</div>
 						<div class="col-lg-2">
 							<img class="uk-preserve-width uk-border-circle" src="{{ URL::asset('templateslide/assets/img/icon/ptplogo.png') }}" width="170" alt="">
@@ -106,7 +110,11 @@ body{
 							<b><label>
 								Tanggal PTKAK:
 							</label></b>
+							@if( Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU"|| Auth::user()->ACCESS == 'DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU' || Auth::user()->ACCESS == 'VP PENGENDALIAN KINERJA DAN JAMINAN MUTU')
 							<input type="text"  class="form-control m-input" data-date-format="dd-mm-yyyy" name="tanggal" id="tanggal" placeholder="Input Tanggal" required>
+							@else
+							<input type="text"  class="form-control m-input" data-date-format="dd-mm-yyyy" name="tanggal" id="tanggal" placeholder="Input Tanggal" readonly="">
+							@endif
 						</div>
 						<div class="col-lg-8">
 							<label class="">
@@ -117,7 +125,11 @@ body{
 							<b><label class="">
 								Halaman:
 							</label></b>
+							@if( Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU"|| Auth::user()->ACCESS == 'DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU' || Auth::user()->ACCESS == 'VP PENGENDALIAN KINERJA DAN JAMINAN MUTU')
 							<input type="text"  class="form-control m-input" name="halaman" id="halaman" placeholder="Input Halaman" required>
+							@else
+							<input type="text"  class="form-control m-input" name="halaman" id="halaman" placeholder="Input Halaman" readonly="">
+							@endif
 						</div>
 					</div>
 					<div class="form-group m-form__group row">
@@ -125,16 +137,21 @@ body{
 							<b><label>
 								No PTKAK:
 							</label></b>
+							@if( Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU"|| Auth::user()->ACCESS == 'DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU' || Auth::user()->ACCESS == 'VP PENGENDALIAN KINERJA DAN JAMINAN MUTU')
 							<input type="text"  class="form-control m-input" name="noptkak" id="noptkak" placeholder="Input No PTKAK" required>
+							@else
+							<input type="text"  class="form-control m-input" name="noptkak" id="noptkak" placeholder="Input No PTKAK" required>
+							@endif
 						</div>
 					</div>
-					<hr style="border: 1px solid;">
+					<hr style="border: 1px solid;"> 
 					<div class="form-group m-form__group row">
 						<div class="col-lg-6">
+							@if( Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU"|| Auth::user()->ACCESS == 'DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU' || Auth::user()->ACCESS == 'VP PENGENDALIAN KINERJA DAN JAMINAN MUTU')
 							<b><label class="">
 								Jenis:
 							</label></b>
-							<div class="m-radio-inline">
+							<div class="m-radio-inline"> 
 								<label class="m-radio m-radio--solid">
 									<input type="radio" name="jenis" id="jenis" value="1" required>
 									Tindakan Perbaikan
@@ -145,9 +162,26 @@ body{
 									Tindakan Pencegahan
 									<span></span>
 								</label>
-							</div>
+							@else
+								<b><label class="">
+								Jenis:
+							</label></b>
+							<div class="m-radio-inline">
+								<label class="m-radio m-radio--solid">
+									<input type="radio" name="jenis" id="jenis" value="1" readonly="">
+									Tindakan Perbaikan
+									<span></span>
+								</label>
+								<label class="m-radio m-radio--solid">
+									<input type="radio" name="jenis" id="jenis" value="2" readonly="">
+									Tindakan Pencegahan
+									<span></span>
+								</label>
+							@endif
+							</div> 
 						</div>
 						<div class="col-lg-3">
+							@if( Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU"|| Auth::user()->ACCESS == 'DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU' || Auth::user()->ACCESS == 'VP PENGENDALIAN KINERJA DAN JAMINAN MUTU')
 							<b><label class="">
 								Sumber:
 							</label></b>
@@ -160,6 +194,20 @@ body{
 								</label>
 								@endforeach
 							</div>
+							@else
+							<b><label class="">
+								Sumber:
+							</label></b>
+							<div class="m-radio-inline">
+								@foreach($source_list as $data)
+								<label class="m-radio m-radio--solid">
+									<input type="radio" name="sumber" id="sumber" value="{{ $data->SOURCE_ID}}" readonly="">
+									{{ $data->SOURCE}}
+									<span></span>
+								</label>
+								@endforeach
+							</div>
+							@endif
 						</div>
 						<div class="col-lg-3">
 							&nbsp;
@@ -167,6 +215,7 @@ body{
 					</div>
 					<div class="form-group m-form__group row">
 						<div class="col-lg-6">
+							@if( Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU"|| Auth::user()->ACCESS == 'DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU' || Auth::user()->ACCESS == 'VP PENGENDALIAN KINERJA DAN JAMINAN MUTU')
 							<b><label class="">
 								Pengusul/Auditor:
 							</label></b>
@@ -176,10 +225,22 @@ body{
 								<option value="{{ $data->SUB_DIVISION_ID }}">{{ $data->SUB_DIVISION_NAME }}</option>
 								@endforeach
 							</select>
+							@else
+							<b><label class=""> 
+								Pengusul/Auditor:
+							</label></b>
+							<select class="form-control select2-list" id="pengusulauditor" name="pengusulauditor" readonly="">
+								<option value="">--Pengusul/Auditor--</option>
+								@foreach($subdiv as $data)
+								<option value="{{ $data->SUB_DIVISION_ID }}">{{ $data->SUB_DIVISION_NAME }}</option>
+								@endforeach
+							</select>
+							@endif
 						</div>
 					</div>
 					<div class="form-group m-form__group row">
 						<div class="col-lg-6">
+							@if( Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU"|| Auth::user()->ACCESS == 'DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU' || Auth::user()->ACCESS == 'VP PENGENDALIAN KINERJA DAN JAMINAN MUTU')
 							<label>
 								Ditujukan/Auditan:
 							</label>
@@ -189,6 +250,17 @@ body{
 								<option value="{{ $data->SUB_DIVISION_ID }}">{{ $data->SUB_DIVISION_NAME }}</option>
 								@endforeach
 							</select>
+							@else
+							<label>
+								Ditujukan/Auditan:
+							</label>
+							<select class="form-control select2-list" id="ditujuakan" name="ditujuakan" required>
+								<option value="">--Ditujukan/Auditan--</option>
+								@foreach($subdiv as $data)
+								<option value="{{ $data->SUB_DIVISION_ID }}">{{ $data->SUB_DIVISION_NAME }}</option>
+								@endforeach
+							</select>
+							@endif
 						</div>
 					</div>
 					<hr style="border: 1px solid;">
@@ -209,7 +281,11 @@ body{
 							<b><label class="">
 								Uraian:
 							</label></b>
+							@if( Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU"|| Auth::user()->ACCESS == 'DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU' || Auth::user()->ACCESS == 'VP PENGENDALIAN KINERJA DAN JAMINAN MUTU')
 							<textarea type="text"  class="form-control m-input" name="uraian" id="uraian" placeholder="Input Uraian" required></textarea>
+							@else
+							<textarea type="text"  class="form-control m-input" name="uraian" id="uraian" placeholder="Input Uraian" readonly=""></textarea>
+							@endif
 						</div>
 					</div>
 					<div class="form-group m-form__group row">
@@ -217,7 +293,11 @@ body{
 							<b><label>
 								lokasi:
 							</label></b>
+							@if( Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU"|| Auth::user()->ACCESS == 'DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU' || Auth::user()->ACCESS == 'VP PENGENDALIAN KINERJA DAN JAMINAN MUTU')
 							<input type="text"  class="form-control m-input" name="lokasi" id="lokasi" placeholder="Input Lokasi" required>
+							@else
+							<input type="text"  class="form-control m-input" name="lokasi" id="lokasi" placeholder="Input Lokasi" readonly="">
+							@endif
 						</div>
 					</div>
 					<div class="form-group m-form__group row">
@@ -238,10 +318,14 @@ body{
 					<div class="form-group m-form__group row">
 						<div class="col-lg-8">
 							<b><label>
-								Referensi:
+								Referensi: 
 							</label>
 							</b>
+							@if( Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU"|| Auth::user()->ACCESS == 'DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU' || Auth::user()->ACCESS == 'VP PENGENDALIAN KINERJA DAN JAMINAN MUTU')
 							<input type="text"  class="form-control m-input" name="referensi" id="referensi" placeholder="Input Referensi" required>
+							@else
+							<input type="text"  class="form-control m-input" name="referensi" id="referensi" placeholder="Input Referensi" readonly="">
+							@endif
 						</div>	
 					</div>
 					<br>
@@ -251,16 +335,24 @@ body{
 							<b><label class="">
 								Tindakan Awal:
 							</label></b>
-							<textarea type="text"  class="form-control m-input" name="tindakan" id="tindakan" placeholder="Input Tindakan" required></textarea>
+							@if( Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU"|| Auth::user()->ACCESS == 'DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU' || Auth::user()->ACCESS == 'VP PENGENDALIAN KINERJA DAN JAMINAN MUTU')
+							<textarea type="text"  class="form-control m-input" name="tindakan" id="tindakan" placeholder="Input Tindakan" readonly=""></textarea>
+							@else
+							<textarea type="text"  class="form-control m-input" name="tindakan" id="tindakan" placeholder="Input Tindakan" required=""></textarea>	
+							@endif
 						</div>
 					</div>
 					<hr style="border: 1px solid;">
 					<div class="form-group m-form__group row">
 						<div class="col-lg-12">
 							<b><label class="">
-								Akar Penyebab:
+								Tindakan Pencegahan: 
 							</label></b>
-							<textarea type="text"  class="form-control m-input" name="penyebab" id="penyebab" placeholder="Input Penyebab" required></textarea>
+							@if( Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU"|| Auth::user()->ACCESS == 'DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU' || Auth::user()->ACCESS == 'VP PENGENDALIAN KINERJA DAN JAMINAN MUTU')
+							<textarea type="text"  class="form-control m-input" name="penyebab" id="penyebab" placeholder="Input Penyebab" readonly=""></textarea>
+							@else
+							<textarea type="text"  class="form-control m-input" name="penyebab" id="penyebab" placeholder="Input Penyebab" required=""></textarea>
+							@endif
 						</div>
 					</div>
 					<hr style="border: 1px solid;">
@@ -269,7 +361,11 @@ body{
 							<b><label class="">
 								Tindakan Koreksi/ Tindakan Perbaikan:
 							</label></b>
-							<textarea type="text"  class="form-control m-input" name="tindakankorek" id="tindakankorek" placeholder="Input Tindakan" required></textarea>
+							@if( Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU"|| Auth::user()->ACCESS == 'DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU' || Auth::user()->ACCESS == 'VP PENGENDALIAN KINERJA DAN JAMINAN MUTU')
+							<textarea type="text"  class="form-control m-input" name="tindakankorek" id="tindakankorek" placeholder="Input Tindakan" readonly=""></textarea>
+							@else
+							<textarea type="text"  class="form-control m-input" name="tindakankorek" id="tindakankorek" placeholder="Input Tindakan" required=""></textarea>
+							@endif
 						</div>
 					</div>
 					<hr style="border: 1px solid;">
@@ -278,7 +374,11 @@ body{
 							<b><label class="">
 								Akar Penyebab:
 							</label></b>
-							<textarea type="text"  class="form-control m-input" name="penyebab1" id="penyebab1" placeholder="Input Penyebab" required></textarea>
+							@if( Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU"|| Auth::user()->ACCESS == 'DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU' || Auth::user()->ACCESS == 'VP PENGENDALIAN KINERJA DAN JAMINAN MUTU')
+							<textarea type="text"  class="form-control m-input" name="penyebab1" id="penyebab1" placeholder="Input Penyebab" readonly=""></textarea>
+							@else
+							<textarea type="text"  class="form-control m-input" name="penyebab1" id="penyebab1" placeholder="Input Penyebab" required="" "></textarea>
+							@endif
 						</div>
 					</div>
 					<div>
@@ -293,7 +393,7 @@ body{
 					
 				</form>
 			</div>
-
+ 
 		</div>	
 	</div>
 

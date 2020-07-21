@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>PT. Pelabuhan Tanjung Priuk</title>
+	<title>PT. Pelabuhan Tanjung Priok</title>
 
 	<link href="{{ URL::asset('templateslide/assets/css/style.css') }}" rel="stylesheet" type="text/css">
 	<link href="{{ URL::asset('templateslide/assets/css/imagehover/imagehover.min.css') }}" rel="stylesheet" type="text/css">
@@ -54,7 +54,7 @@ body{
 				<img src="{{ URL::asset('templateslide/assets/img/logo/ptpwhite.png') }}" class="fl-logo" onclick="location.href = '{{ url('dashboard')}}'">
 				
 				<span class="fl-title-logo">
-					E-Reporting PT. Pelabuhan Tanjung Priok	
+					E-Report PT. Pelabuhan Tanjung Priok	
 				</span>
 
 				<span class="fl-menu-tool">
@@ -200,11 +200,13 @@ body{
 							<select class="form-control select2-list" id="status" name="status" data-validation="required" data-validation-error-msg="Silahkan Pilih Auditan">
 								<option value="">--PIlih Status--</option>
 								@if($ver1 == '0')
-								<option value="0" selected>OPEN</option>
-								<option value="1">CLOSE</option>
+								<option value="0" selected>CREATE</option>
+								<option value="1">ANSWER</option>
+								<option value="2">CLOSE</option>
 								@else
-								<option value="0" >OPEN</option>
-								<option value="1" selected>CLOSE</option>
+								<option value="0" selected>CREATE</option>
+								<option value="1">ANSWER</option>
+								<option value="2">CLOSE</option>
 								@endif
 							</select>
 						</div>
@@ -271,7 +273,7 @@ body{
 					<div class="form-group m-form__group row">
 						<div class="col-lg-12">
 							<label class="">
-								Akar Penyebab:
+								Tindakan Pencegahan:
 							</label>
 							<textarea type="text"  class="form-control m-input" name="penyebab" id="penyebab" disabled>{{ $cause }}</textarea>
 						</div>
@@ -288,7 +290,7 @@ body{
 					<div class="form-group m-form__group row">
 						<div class="col-lg-12">
 							<label class="">
-								Akar Penyebab:
+								Tindakan Pencegahan:
 							</label>
 							<textarea type="text"  class="form-control m-input" name="penyebab1" id="penyebab1" disabled>{{ $preven }}</textarea>
 						</div>

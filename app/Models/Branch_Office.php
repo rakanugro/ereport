@@ -13,4 +13,5 @@ class Branch_Office extends Model
         'BRANCH_OFFICE_CODE',
         'ACTIVE'
     ];
+    
 }

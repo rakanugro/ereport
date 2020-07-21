@@ -46,7 +46,7 @@
 				<img src="{{ URL::asset('templateslide/assets/img/logo/ptpwhite.png') }}" class="fl-logo" onclick="location.href = '{{ url('dashboard')}}'">
 				
 				<span class="fl-title-logo">
-					E-Reporting PT. Pelabuhan Tanjung Priok	
+					E-Report PT. Pelabuhan Tanjung Priok	
 				</span>
 
 				<span class="fl-menu-tool">

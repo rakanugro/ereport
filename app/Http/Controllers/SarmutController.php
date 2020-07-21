@@ -8,6 +8,7 @@ use App\Models\Sub_Indicator;
 use App\Models\Period;
 use App\Models\Sub_Division;
 use App\Models\Master_Sarmut;
+use App\Models\Sarmut_Upload;
 use App\Models\Det_Sarmut;
 use App\Models\Sub_Det_Sarmut;
 use App\Models\Head_Sarmut;
@@ -704,7 +705,7 @@ public function txsarmut_list(Request $request)
     ->where('a.ORGANIZATION_STRUCTURE_ID', '=' , Auth::user()->ORG_ID)
     ->first();
 
-        // dd($dbutama);
+       //dd($dbutama);
 
     if($dbutama->IS_CABANG == "0"){
 
@@ -733,10 +734,32 @@ public function txsarmut_list(Request $request)
     ->leftJoin('tm_sub_division as sd', 'sd.SUB_DIVISION_ID', '=' , 'o.SUB_DIVISION_ID')
     ->leftJoin('tm_division as d', 'd.DIVISION_ID', '=' , 'o.DIVISION_ID')
     ->leftJoin('tm_branch_office as c', 'c.BRANCH_OFFICE_ID', '=' , 'o.BRANCH_OFFICE_ID')
-    ->select('t.HEADER_SASARAN_MUTU_ID as SASARAN_MUTU_ID', 'c.BRANCH_OFFICE_NAME as BRANCH_OFFICE_NAME', 'd.DIVISION_NAME as DIVISION_NAME', 'sd.SUB_DIVISION_NAME as SUB_DIVISION_NAME', 't.YEAR as YEAR', 't.MONTH as MONTH', 't.STATUS as STATUS', 't.ORGANIZATION_STRUCTURE_ID as ORGANIZATION_STRUCTURE_ID', 't.ALASAN_KEMBALIKAN as ALASAN_KEMBALIKAN','t.PERCENTAGE')
+    ->leftJoin('tm_directorate as dir', 'dir.DIRECTORATE_ID', '=' , 'o.DIRECTORATE_ID')
+    ->select(\DB::raw("DATE_FORMAT(STR_TO_DATE(IF(t.MONTH = 'DES','DEC', t.MONTH), '%M'), '%m') as MONTHS"),'t.HEADER_SASARAN_MUTU_ID as SASARAN_MUTU_ID', 'dir.DIRECTORATE_NAME as DIRECTORATE_NAME', \DB::raw("case when c.BRANCH_OFFICE_NAME IS NOT NULL then c.BRANCH_OFFICE_NAME ELSE d.DIVISION_NAME END AS DIVISION_NAME"), 'sd.SUB_DIVISION_NAME as SUB_DIVISION_NAME', 't.YEAR as YEAR', 't.MONTH as MONTH', 't.STATUS as STATUS', 't.ORGANIZATION_STRUCTURE_ID as ORGANIZATION_STRUCTURE_ID', 't.ALASAN_KEMBALIKAN as ALASAN_KEMBALIKAN','t.PERCENTAGE')
     ->orWhere('t.ORGANIZATION_STRUCTURE_ID', '=', Auth::user()->ORG_ID)
-    ->orWhere('t.STATUS', 3)
-    ->orderBy('t.created_at', 'desc');
+    //->orWhere('t.STATUS', 3)
+    ->orWhereIn('t.STATUS', [1,2,3,4])
+    ->orderBy('dir.DIRECTORATE_ID', 'asc')
+    ->orderBy(\DB::raw("IF(ISNULL(`d`.`DIVISION_NAME`),BRANCH_OFFICE_NAME,DIVISION_NAME)"), 'asc')
+    ->orderBy('sd.SUB_DIVISION_NAME', 'asc')
+    ->orderBy('t.YEAR', 'desc')
+    ->orderBy(\DB::raw("DATE_FORMAT(STR_TO_DATE(IF(t.MONTH = 'DES','DEC', t.MONTH), '%M'), '%m')"), 'desc');
+}
+else if(Auth::user()->ACCESS == 'VP SUB DIVISI'){
+    $items = \DB::table('tm_organization_structure as o2')
+    ->leftJoin('tm_division as d2',\DB::raw("isnull(o2.BRANCH_OFFICE_ID) and o2.DIVISION_ID"),'=','d2.DIVISION_ID')
+    ->leftJoin('tm_branch_office as bo2',\DB::raw("isnull(o2.DIVISION_ID) and o2.BRANCH_OFFICE_ID"),'=','bo2.BRANCH_OFFICE_ID')
+    ->leftJoin('tm_organization_structure as o',\DB::raw("o.BRANCH_OFFICE_ID = bo2.BRANCH_OFFICE_ID or o.DIVISION_ID"),'=','d2.DIVISION_ID')
+    ->leftJoin('tx_header_sasaran_mutu as t', 't.ORGANIZATION_STRUCTURE_ID', '=' , 'o.ORGANIZATION_STRUCTURE_ID')
+    ->leftJoin('tm_sub_division as sd', 'sd.SUB_DIVISION_ID', '=' , 'o.SUB_DIVISION_ID')
+    ->leftJoin('tm_division as d', 'd.DIVISION_ID', '=' , 'o.DIVISION_ID')
+    ->leftJoin('tm_branch_office as c', 'c.BRANCH_OFFICE_ID', '=' , 'o.BRANCH_OFFICE_ID')
+    ->leftJoin('tm_directorate as dir', 'dir.DIRECTORATE_ID', '=' , 'o.DIRECTORATE_ID')
+    ->select(\DB::raw("DATE_FORMAT(STR_TO_DATE(IF(t.MONTH = 'DES','DEC', t.MONTH), '%M'), '%m') as MONTHS"),'t.HEADER_SASARAN_MUTU_ID as SASARAN_MUTU_ID', 'dir.DIRECTORATE_NAME as DIRECTORATE_NAME', \DB::raw("case when c.BRANCH_OFFICE_NAME IS NOT NULL then c.BRANCH_OFFICE_NAME ELSE d.DIVISION_NAME END AS DIVISION_NAME"), 'sd.SUB_DIVISION_NAME as SUB_DIVISION_NAME', 't.YEAR as YEAR', 't.MONTH as MONTH', 't.STATUS as STATUS', 't.ORGANIZATION_STRUCTURE_ID as ORGANIZATION_STRUCTURE_ID', 't.ALASAN_KEMBALIKAN as ALASAN_KEMBALIKAN','t.PERCENTAGE')
+    ->where('o2.ORGANIZATION_STRUCTURE_ID', '=', Auth::user()->ORG_ID)
+    ->orderBy('t.YEAR', 'desc')
+    ->orderBy(\DB::raw("DATE_FORMAT(STR_TO_DATE(IF(t.MONTH = 'DES','DEC', t.MONTH), '%M'), '%m')"), 'desc')
+    ->orderBy('sd.SUB_DIVISION_NAME', 'asc');
 }
 else{
     $items = \DB::table('tx_header_sasaran_mutu as t')
@@ -744,9 +767,11 @@ else{
     ->leftJoin('tm_sub_division as sd', 'sd.SUB_DIVISION_ID', '=' , 'o.SUB_DIVISION_ID')
     ->leftJoin('tm_division as d', 'd.DIVISION_ID', '=' , 'o.DIVISION_ID')
     ->leftJoin('tm_branch_office as c', 'c.BRANCH_OFFICE_ID', '=' , 'o.BRANCH_OFFICE_ID')
-    ->select('t.HEADER_SASARAN_MUTU_ID as SASARAN_MUTU_ID', 'c.BRANCH_OFFICE_NAME as BRANCH_OFFICE_NAME', 'd.DIVISION_NAME as DIVISION_NAME', 'sd.SUB_DIVISION_NAME as SUB_DIVISION_NAME', 't.YEAR as YEAR', 't.MONTH as MONTH', 't.STATUS as STATUS', 't.ORGANIZATION_STRUCTURE_ID as ORGANIZATION_STRUCTURE_ID', 't.ALASAN_KEMBALIKAN as ALASAN_KEMBALIKAN','t.PERCENTAGE')
+    ->leftJoin('tm_directorate as dir', 'dir.DIRECTORATE_ID', '=' , 'o.DIRECTORATE_ID')
+    ->select(\DB::raw("DATE_FORMAT(STR_TO_DATE(IF(t.MONTH = 'DES','DEC', t.MONTH), '%M'), '%m') as MONTHS"),'t.HEADER_SASARAN_MUTU_ID as SASARAN_MUTU_ID', 'dir.DIRECTORATE_NAME as DIRECTORATE_NAME', \DB::raw("case when c.BRANCH_OFFICE_NAME IS NOT NULL then c.BRANCH_OFFICE_NAME ELSE d.DIVISION_NAME END AS DIVISION_NAME"), 'sd.SUB_DIVISION_NAME as SUB_DIVISION_NAME', 't.YEAR as YEAR', 't.MONTH as MONTH', 't.STATUS as STATUS', 't.ORGANIZATION_STRUCTURE_ID as ORGANIZATION_STRUCTURE_ID', 't.ALASAN_KEMBALIKAN as ALASAN_KEMBALIKAN','t.PERCENTAGE')
     ->where('t.ORGANIZATION_STRUCTURE_ID', '=', Auth::user()->ORG_ID)
-    ->orderBy('t.created_at', 'desc');
+    ->orderBy('t.YEAR', 'desc')
+    ->orderBy(\DB::raw("DATE_FORMAT(STR_TO_DATE(IF(t.MONTH = 'DES','DEC', t.MONTH), '%M'), '%m')"), 'desc');
 }
 $sarmut_list = $items->get();
 $now            = Carbon::now();
@@ -821,18 +846,27 @@ public function filter_txsarmut($idsubdiv)
 
    $organize_struct_list = $organize_struct->get();
 
-
-
-
    $items = \DB::table('tx_header_sasaran_mutu as t')
-   ->leftJoin('tm_organization_structure as o', 'o.ORGANIZATION_STRUCTURE_ID', '=' , 't.ORGANIZATION_STRUCTURE_ID')
-   ->leftJoin('tm_sub_division as sd', 'sd.SUB_DIVISION_ID', '=' , 'o.SUB_DIVISION_ID')
-   ->leftJoin('tm_division as d', 'd.DIVISION_ID', '=' , 'o.DIVISION_ID')
-   ->leftJoin('tm_branch_office as c', 'c.BRANCH_OFFICE_ID', '=' , 'o.BRANCH_OFFICE_ID')
-   ->select('t.HEADER_SASARAN_MUTU_ID as SASARAN_MUTU_ID', 'c.BRANCH_OFFICE_NAME as BRANCH_OFFICE_NAME', 'd.DIVISION_NAME as DIVISION_NAME', 'sd.SUB_DIVISION_NAME as SUB_DIVISION_NAME', 't.YEAR as YEAR', 't.MONTH as MONTH', 't.STATUS as STATUS', 't.ORGANIZATION_STRUCTURE_ID as ORGANIZATION_STRUCTURE_ID', 't.ALASAN_KEMBALIKAN as ALASAN_KEMBALIKAN','t.PERCENTAGE')
-   ->where('o.SUB_DIVISION_ID', '=', $idsubdiv)
+    ->leftJoin('tm_organization_structure as o', 'o.ORGANIZATION_STRUCTURE_ID', '=' , 't.ORGANIZATION_STRUCTURE_ID')
+    ->leftJoin('tm_sub_division as sd', 'sd.SUB_DIVISION_ID', '=' , 'o.SUB_DIVISION_ID')
+    ->leftJoin('tm_division as d', 'd.DIVISION_ID', '=' , 'o.DIVISION_ID')
+    ->leftJoin('tm_branch_office as c', 'c.BRANCH_OFFICE_ID', '=' , 'o.BRANCH_OFFICE_ID')
+    ->leftJoin('tm_directorate as dir', 'dir.DIRECTORATE_ID', '=' , 'o.DIRECTORATE_ID')
+    ->select(\DB::raw("DATE_FORMAT(STR_TO_DATE(IF(t.MONTH = 'DES','DEC', t.MONTH), '%M'), '%m') as MONTHS"),'t.HEADER_SASARAN_MUTU_ID as SASARAN_MUTU_ID', 'dir.DIRECTORATE_NAME as DIRECTORATE_NAME', \DB::raw("case when c.BRANCH_OFFICE_NAME IS NOT NULL then c.BRANCH_OFFICE_NAME ELSE d.DIVISION_NAME END AS DIVISION_NAME"), 'sd.SUB_DIVISION_NAME as SUB_DIVISION_NAME', 't.YEAR as YEAR', 't.MONTH as MONTH', 't.STATUS as STATUS', 't.ORGANIZATION_STRUCTURE_ID as ORGANIZATION_STRUCTURE_ID', 't.ALASAN_KEMBALIKAN as ALASAN_KEMBALIKAN','t.PERCENTAGE')
+    ->where('o.SUB_DIVISION_ID', '=', $idsubdiv)
+    ->orderBy('t.YEAR', 'desc')
+    ->orderBy(\DB::raw("DATE_FORMAT(STR_TO_DATE(IF(t.MONTH = 'DES','DEC', t.MONTH), '%M'), '%m')"), 'desc');
+
+
+   //$items = \DB::table('tx_header_sasaran_mutu as t')
+   //->leftJoin('tm_organization_structure as o', 'o.ORGANIZATION_STRUCTURE_ID', '=' , 't.ORGANIZATION_STRUCTURE_ID')
+   //->leftJoin('tm_sub_division as sd', 'sd.SUB_DIVISION_ID', '=' , 'o.SUB_DIVISION_ID')
+   //->leftJoin('tm_division as d', 'd.DIVISION_ID', '=' , 'o.DIVISION_ID')
+   //->leftJoin('tm_branch_office as c', 'c.BRANCH_OFFICE_ID', '=' , 'o.BRANCH_OFFICE_ID')
+   //->select('t.HEADER_SASARAN_MUTU_ID as SASARAN_MUTU_ID', 'c.BRANCH_OFFICE_NAME as BRANCH_OFFICE_NAME', 'd.DIVISION_NAME as DIVISION_NAME', 'sd.SUB_DIVISION_NAME as SUB_DIVISION_NAME', 't.YEAR as YEAR', 't.MONTH as MONTH', 't.STATUS as STATUS', 't.ORGANIZATION_STRUCTURE_ID as ORGANIZATION_STRUCTURE_ID', 't.ALASAN_KEMBALIKAN as ALASAN_KEMBALIKAN','t.PERCENTAGE')
+   //->where('o.SUB_DIVISION_ID', '=', $idsubdiv)
    // ->where('t.STATUS', '=', 2)
-   ->orderBy('t.created_at', 'desc');
+   //->orderBy('t.created_at', 'desc');
 
    $sarmut_list = $items->get();
 
@@ -1048,161 +1082,342 @@ public function mstsarmut_kembalikan(Request $request)
     return redirect('/sarmut');
 }
 
+public function delete_file(Request $request)
+{
+    $data = \App\Models\Master_Hsarmut::where('HEADER_SASARAN_MUTU_ID',$request->id)->update([
+        'FILE_UPLOAD' => NULL,
+        'FILE_DELETE' => '1',
+        'FILE_NAME' => NULL
+        ]);
+
+    return $data;
+}
+
 public function save_tx_sarmut(Request $request)
 {
         // $req = $request->all();
-    $countjum = count($request->actual);
-    $tes = $request->remark;
-    $jml = $countjum;
-    for($i = 0; $i < $countjum; $i++)
-    {
-        if($tes[$i] == "Data Kurang")
+    $filex    = $request->file;
+    $thn = $request->years;
+    $bln = $request->months;
+    if($filex != '' || $filex != null)
         {
-            $jml = $jml-1;
-        }
-    }
-        // dd($jml);   
-    $percentage = round($jml/$countjum*100,2);
-        //dd($percentage);
-    $cek = Head_Sarmut::where('YEAR', '=', $request->years)
-    ->where('MONTH', '=', $request->months)
-    ->where('ORGANIZATION_STRUCTURE_ID', '=', Auth::user()->ORG_ID)->get();
-    if($cek->isEmpty()){
-        $head = new Head_Sarmut;
-        $head->ORGANIZATION_STRUCTURE_ID = Auth::user()->ORG_ID;
-        $head->YEAR = $request->years;
-        $head->MONTH = $request->months;
-        $head->STATUS = '1';
-        $head->PERCENTAGE = $percentage;
-        $head->save();
+           date_default_timezone_set('Asia/Jakarta');
+           //dd($request->file('file'));
+           $type_file    = $request->file('file')->getClientOriginalExtension();
+           $size_file    = $request->file('file')->getSize();
+           $path         = base_path().'/public/file_sarmut/';
+           $folder       = $path.$bln.$thn.'/'; 
+           $dokumen      = $folder.'sarmut/';
+           $file         = $bln.$thn.'_'.date('Ymd_his').'.'.$type_file;
+           $file_location    = 'file_sarmut/'.$bln.$thn.'/sarmut/'.$file;
+           $name_file    = $file;
 
-        $idhead = \DB::getPdo()->lastInsertId();
+           if(!file_exists($folder)){
+              if(mkdir($folder, 0777,true)){
+                chmod($folder, 0777);
+            }  
+            } 
+            if(!file_exists($dokumen)){
+                if(mkdir($dokumen, 0777,true)){
+                    chmod($dokumen, 0777);
+                }   
+            } 
+            $pathfix = $dokumen;
+            $request->file('file')->move($pathfix, $file);
+            
+          $countjum = count($request->actual);
+          $tes = $request->remark;
+          $jml = $countjum;
+          for($i = 0; $i < $countjum; $i++)
+          {
+              if($tes[$i] == "Data Kurang")
+              {
+                  $jml = $jml-1;
+              }
+          }
+              // dd($jml);   
+          $percentage = round($jml/$countjum*100,2);
+              //dd($percentage);
+          $cek = Head_Sarmut::where('YEAR', '=', $request->years)
+          ->where('MONTH', '=', $request->months)
+          ->where('ORGANIZATION_STRUCTURE_ID', '=', Auth::user()->ORG_ID)->get();
+          if($cek->isEmpty()){
+              $head = new Head_Sarmut;
+              $head->ORGANIZATION_STRUCTURE_ID = Auth::user()->ORG_ID;
+              $head->YEAR = $request->years;
+              $head->MONTH = $request->months;
+              $head->STATUS = '1';
+              $head->PERCENTAGE = $percentage;
+              $head->FILE_UPLOAD = $file_location;
+              $head->FILE_NAME = $name_file;
+              $head->save();
 
-        $hasil = array();
-        $i = 0;
-        $j = 0;
-        $k = 0;
-        foreach ($request->indicator_id as $data) {
-            $item = \DB::table('tm_indicator as t')
-            ->where('INDICATOR_ID', $data)->first();
-            $formuladb = $item->FORMULA;
-                // dd($formuladb);
-            if ($formuladb == '') {
-                $hasils = $request->actual[$j];
-            }else{
-                    // $sub_ind = str_split($item->FORMULA, 1);
-                    $pttn='+-/*()';   # standard mathematical operators
-                    $pttn=sprintf('@([%s])@', preg_quote($pttn)); # an escaped/quoted pattern
+              $idhead = \DB::getPdo()->lastInsertId();
 
-                    $sub_ind=preg_split($pttn, preg_replace('@\s@', '', $item->FORMULA), -1, PREG_SPLIT_DELIM_CAPTURE);
-                    foreach ($sub_ind as $split){
-                        if(is_numeric($split)){
-                            // dd($split);
-                            $formuladb = str_replace($split, $req['subreal_'.$data.'_'.$split], $formuladb);
-                            $k = $k+1;
-                        }
-                    }
-                    $hasils = eval('return '.str_replace(':', '/', $formuladb).';');
-                }
+              $hasil = array();
+              $i = 0;
+              $j = 0;
+              $k = 0;
+              foreach ($request->indicator_id as $data) {
+                  $item = \DB::table('tm_indicator as t')
+                  ->where('INDICATOR_ID', $data)->first();
+                  $formuladb = $item->FORMULA;
+                      // dd($formuladb);
+                  if ($formuladb == '') {
+                      $hasils = $request->actual[$j];
+                  }else{
+                          // $sub_ind = str_split($item->FORMULA, 1);
+                          $pttn='+-/*()';   # standard mathematical operators
+                          $pttn=sprintf('@([%s])@', preg_quote($pttn)); # an escaped/quoted pattern
 
-                //Detil
-                $det = new Det_Sarmut;
-                $det->HEADER_SASARAN_MUTU_ID = $idhead;
-                $det->INDICATOR_ID = $data;
-                $det->ACTUAL_REALISASI = $hasils;
-                $det->KETERANGAN = $request->remark[$j];
-                $det->ALASAN = $request->alasan[$j];
-                $det->save();
+                          $sub_ind=preg_split($pttn, preg_replace('@\s@', '', $item->FORMULA), -1, PREG_SPLIT_DELIM_CAPTURE);
+                          foreach ($sub_ind as $split){
+                              if(is_numeric($split)){
+                                  // dd($split);
+                                  $formuladb = str_replace($split, $req['subreal_'.$data.'_'.$split], $formuladb);
+                                  $k = $k+1;
+                              }
+                          }
+                          $hasils = eval('return '.str_replace(':', '/', $formuladb).';');
+                      }
 
-                $iddet = \DB::getPdo()->lastInsertId();
-                //Sub Detil
-                if ($formuladb <> '') {
-                    $num_split = array();
-                    foreach ($sub_ind as $split){
-                        if(is_numeric($split)){
-                            $formuladb = str_replace($split, $req['subreal_'.$data.'_'.$split], $formuladb);
-                            $sub_det = new Sub_Det_Sarmut;
-                            $sub_det->DET_SASARAN_MUTU_ID = $iddet;
-                            $sub_det->SUB_INDICATOR_ID = $request->sub_ind_id[$i];
-                            $sub_det->ACTUAL_REALISASI = $req['subreal_'.$data.'_'.$split];
-                            $sub_det->save();
-                            $i = $i+1;
-                        }
-                    }
-                }
-                
-                array_push($hasil, $hasils);
-                $j = $j+1;
-            }
+                      //Detil
+                      $det = new Det_Sarmut;
+                      $det->HEADER_SASARAN_MUTU_ID = $idhead;
+                      $det->INDICATOR_ID = $data;
+                      $det->ACTUAL_REALISASI = $hasils;
+                      $det->KETERANGAN = $request->remark[$j];
+                      $det->ALASAN = $request->alasan[$j];
+                      $det->save();
 
-            $modul = "TRANSACTION SARMUT";
+                      $iddet = \DB::getPdo()->lastInsertId();
+                      //Sub Detil
+                      if ($formuladb <> '') {
+                          $num_split = array();
+                          foreach ($sub_ind as $split){
+                              if(is_numeric($split)){
+                                  $formuladb = str_replace($split, $req['subreal_'.$data.'_'.$split], $formuladb);
+                                  $sub_det = new Sub_Det_Sarmut;
+                                  $sub_det->DET_SASARAN_MUTU_ID = $iddet;
+                                  $sub_det->SUB_INDICATOR_ID = $request->sub_ind_id[$i];
+                                  $sub_det->ACTUAL_REALISASI = $req['subreal_'.$data.'_'.$split];
+                                  $sub_det->save();
+                                  $i = $i+1;
+                              }
+                          }
+                      }
+                      
+                      array_push($hasil, $hasils);
+                      $j = $j+1;
+                  }
 
-            (new Main_Log)->setLog("Save Data Transaction Sarmut",json_encode($head),$modul,Auth::user()->ID);
-            return redirect('/txsarmut');
+                  $modul = "TRANSACTION SARMUT";
+
+                  (new Main_Log)->setLog("Save Data Transaction Sarmut",json_encode($head),$modul,Auth::user()->ID);
+                  return redirect('/txsarmut');
+              }
+              else
+              {
+
+                 return redirect('/txsarmut')->with('error','Data Sudah Ada!!!');
+             }
         }
         else
         {
+            $countjum = count($request->actual);
+          $tes = $request->remark;
+          $jml = $countjum;
+          for($i = 0; $i < $countjum; $i++)
+          {
+              if($tes[$i] == "Data Kurang")
+              {
+                  $jml = $jml-1;
+              }
+          }
+              // dd($jml);   
+          $percentage = round($jml/$countjum*100,2);
+              //dd($percentage);
+          $cek = Head_Sarmut::where('YEAR', '=', $request->years)
+          ->where('MONTH', '=', $request->months)
+          ->where('ORGANIZATION_STRUCTURE_ID', '=', Auth::user()->ORG_ID)->get();
+          if($cek->isEmpty()){
+              $head = new Head_Sarmut;
+              $head->ORGANIZATION_STRUCTURE_ID = Auth::user()->ORG_ID;
+              $head->YEAR = $request->years;
+              $head->MONTH = $request->months;
+              $head->STATUS = '1';
+              $head->PERCENTAGE = $percentage;
+              $head->save();
 
-           return redirect('/txsarmut')->with('error','Data Sudah Ada!!!');
-       }
+              $idhead = \DB::getPdo()->lastInsertId();
 
+              $hasil = array();
+              $i = 0;
+              $j = 0;
+              $k = 0;
+              foreach ($request->indicator_id as $data) {
+                  $item = \DB::table('tm_indicator as t')
+                  ->where('INDICATOR_ID', $data)->first();
+                  $formuladb = $item->FORMULA;
+                      // dd($formuladb);
+                  if ($formuladb == '') {
+                      $hasils = $request->actual[$j];
+                  }else{
+                          // $sub_ind = str_split($item->FORMULA, 1);
+                          $pttn='+-/*()';   # standard mathematical operators
+                          $pttn=sprintf('@([%s])@', preg_quote($pttn)); # an escaped/quoted pattern
 
-        // dd($hasil);
+                          $sub_ind=preg_split($pttn, preg_replace('@\s@', '', $item->FORMULA), -1, PREG_SPLIT_DELIM_CAPTURE);
+                          foreach ($sub_ind as $split){
+                              if(is_numeric($split)){
+                                  // dd($split);
+                                  $formuladb = str_replace($split, $req['subreal_'.$data.'_'.$split], $formuladb);
+                                  $k = $k+1;
+                              }
+                          }
+                          $hasils = eval('return '.str_replace(':', '/', $formuladb).';');
+                      }
 
+                      //Detil
+                      $det = new Det_Sarmut;
+                      $det->HEADER_SASARAN_MUTU_ID = $idhead;
+                      $det->INDICATOR_ID = $data;
+                      $det->ACTUAL_REALISASI = $hasils;
+                      $det->KETERANGAN = $request->remark[$j];
+                      $det->ALASAN = $request->alasan[$j];
+                      $det->save();
+
+                      $iddet = \DB::getPdo()->lastInsertId();
+                      //Sub Detil
+                      if ($formuladb <> '') {
+                          $num_split = array();
+                          foreach ($sub_ind as $split){
+                              if(is_numeric($split)){
+                                  $formuladb = str_replace($split, $req['subreal_'.$data.'_'.$split], $formuladb);
+                                  $sub_det = new Sub_Det_Sarmut;
+                                  $sub_det->DET_SASARAN_MUTU_ID = $iddet;
+                                  $sub_det->SUB_INDICATOR_ID = $request->sub_ind_id[$i];
+                                  $sub_det->ACTUAL_REALISASI = $req['subreal_'.$data.'_'.$split];
+                                  $sub_det->save();
+                                  $i = $i+1;
+                              }
+                          }
+                      }
+                      
+                      array_push($hasil, $hasils);
+                      $j = $j+1;
+                  }
+
+                  $modul = "TRANSACTION SARMUT";
+
+                  (new Main_Log)->setLog("Save Data Transaction Sarmut",json_encode($head),$modul,Auth::user()->ID);
+                  return redirect('/txsarmut');
+              }
+              else
+              {
+
+                 return redirect('/txsarmut')->with('error','Data Sudah Ada!!!');
+             }
+        }
 
    }
 
    public function edit_tx_sarmut(Request $request)
    {
+       //dd($request);
         // $req = $request->all();
-    $countjum = count($request->actual);
-    $tes = $request->remark;
-    $jml = $countjum;
-    for($i = 0; $i < $countjum; $i++)
+
+
+    $filex    = $request->file;
+    $filee = $request->file('file');
+    $thn = $request->years;
+    $bln = $request->months;
+    if($filee != '' || $filee != null)
     {
-        if($tes[$i] == "Data Kurang")
+        date_default_timezone_set('Asia/Jakarta');
+        $type_file    = $request->file('file')->getClientOriginalExtension();
+        $size_file    = $request->file('file')->getSize();
+        $path         = base_path().'/public/file_sarmut/';
+        $folder       = $path.$bln.$thn.'/'; 
+        $dokumen      = $folder.'sarmut/';
+        $file         = $bln.$thn.'_'.date('Ymd_his').'.'.$type_file;
+        $file_location    = 'file_sarmut/'.$bln.$thn.'/sarmut/'.$file;
+        $name_file    = $file;
+
+        if(!file_exists($folder))
         {
-            $jml = $jml-1;
+            if(mkdir($folder, 0777,true))
+            {
+                chmod($folder, 0777);
+            }  
+        } 
+        if(!file_exists($dokumen))
+        {
+            if(mkdir($dokumen, 0777,true))
+            {
+                chmod($dokumen, 0777);
+            }   
+        } 
+        $pathfix = $dokumen;
+        $request->file('file')->move($pathfix, $file);
+            
+        $countjum = count($request->actual);
+        $tes = $request->remark;
+        $jml = $countjum;
+        for($i = 0; $i < $countjum; $i++)
+        {
+            if($tes[$i] == "Data Kurang")
+            {
+                $jml = $jml-1;
+            }
         }
-    }
         // dd($jml);   
-    $percentage = round($jml/$countjum*100,2);
+        $percentage = round($jml/$countjum*100,2);
 
-    $header_sarmut_id = $request->header_sarmut_id;
-    $head = Head_Sarmut::where('HEADER_SASARAN_MUTU_ID', '=', $header_sarmut_id)->first();
-    $head->ORGANIZATION_STRUCTURE_ID = Auth::user()->ORG_ID;
-    $head->YEAR = $request->years;
-    $head->MONTH = $request->months;
-    $head->STATUS = '1';
-    $head->PERCENTAGE = $percentage;
-    $head->save();
+        $header_sarmut_id = $request->header_sarmut_id;
+        $head = Head_Sarmut::where('HEADER_SASARAN_MUTU_ID', '=', $header_sarmut_id)->first();
+        $head->ORGANIZATION_STRUCTURE_ID = Auth::user()->ORG_ID;
+        $head->YEAR = $request->years;
+        $head->MONTH = $request->months;
+        $head->STATUS = '1';
+        $head->PERCENTAGE = $percentage;
+        $head->FILE_UPLOAD = $file_location;
+        $head->FILE_NAME = $name_file;
+        $head->FILE_DELETE = '0';
+        $head->save();
 
-    $hasil = array();
-    $i = 0;
-    $j = 0;
-    $k = 0;
-    foreach ($request->indicator_id as $data) {
-        $item = \DB::table('tm_indicator as t')
-        ->where('INDICATOR_ID', $data)->first();
-        $formuladb = $item->FORMULA;
-        if ($formuladb == '') {
-            $hasils = $request->actual[$j];
-        }else{
+        $hasil = array();
+        $i = 0;
+        $j = 0;
+        $k = 0;
+        foreach ($request->indicator_id as $data) 
+        {
+            $item = \DB::table('tm_indicator as t')
+            ->where('INDICATOR_ID', $data)->first();
+            $formuladb = $item->FORMULA;
+            if ($formuladb == '') 
+            {
+              $hasils = $request->actual[$j];
+            }
+            else
+            {
                 // $sub_ind = str_split($item->FORMULA, 1);
                 $pttn='+-/*()';   # standard mathematical operators
                 $pttn=sprintf('@([%s])@', preg_quote($pttn)); # an escaped/quoted pattern
 
                 $sub_ind=preg_split($pttn, preg_replace('@\s@', '', $item->FORMULA), -1, PREG_SPLIT_DELIM_CAPTURE);
-                foreach ($sub_ind as $split){
-                    if(is_numeric($split)){
+                foreach ($sub_ind as $split)
+                {
+                  if(is_numeric($split))
+                  {
                         // dd($req['subreal_'.$data.'_'.$split]);
-                        $formuladb = str_replace($split, $req['subreal_'.$data.'_'.$split], $formuladb);
-                        $k = $k+1;
-                    }
+                    $formuladb = str_replace($split, $req['subreal_'.$data.'_'.$split], $formuladb);
+                    $k = $k+1;
+                  }
                 }
                 // $hasils = eval('return '.$formuladb.';');
                 $hasils = eval('return '.str_replace(':', '/', $formuladb).';');
-            }
+              }
 
             //Detil
             $det = Det_Sarmut::where('INDICATOR_ID', '=', $data)
@@ -1215,23 +1430,112 @@ public function save_tx_sarmut(Request $request)
             $iddet = $det->DET_SASARAN_MUTU_ID;
             // dd($iddet);
             //Sub Detil
-            if ($formuladb <> '') {
+            if ($formuladb <> '') 
+            {
                 $num_split = array();
-                foreach ($sub_ind as $split){
-                    if(is_numeric($split)){
-                        $formuladb = str_replace($split, $req['subreal_'.$data.'_'.$split], $formuladb);
-                        $sub_det = Sub_Det_Sarmut::where('SUB_INDICATOR_ID', '=', $split)
-                        ->where('DET_SASARAN_MUTU_ID', '=', $iddet)->first();
-                        $sub_det->ACTUAL_REALISASI = $req['subreal_'.$data.'_'.$split];
-                        $sub_det->save();
-                        $i = $i+1;
+                foreach ($sub_ind as $split)
+                {
+                    if(is_numeric($split))
+                    {
+                    $formuladb = str_replace($split, $req['subreal_'.$data.'_'.$split], $formuladb);
+                    $sub_det = Sub_Det_Sarmut::where('SUB_INDICATOR_ID', '=', $split)
+                    ->where('DET_SASARAN_MUTU_ID', '=', $iddet)->first();
+                    $sub_det->ACTUAL_REALISASI = $req['subreal_'.$data.'_'.$split];
+                    $sub_det->save();
+                    $i = $i+1;
                     }
                 }
             }
-            array_push($hasil, $hasils);
-            $j = $j+1;
+              array_push($hasil, $hasils);
+              $j = $j+1;
 
         }
+    }
+    else
+    {
+        $countjum = count($request->actual);
+        $tes = $request->remark;
+        $jml = $countjum;
+        for($i = 0; $i < $countjum; $i++)
+        {
+            if($tes[$i] == "Data Kurang")
+            {
+                $jml = $jml-1;
+            }
+        }
+        // dd($jml);   
+        $percentage = round($jml/$countjum*100,2);
+
+        $header_sarmut_id = $request->header_sarmut_id;
+        $head = Head_Sarmut::where('HEADER_SASARAN_MUTU_ID', '=', $header_sarmut_id)->first();
+        $head->ORGANIZATION_STRUCTURE_ID = Auth::user()->ORG_ID;
+        $head->YEAR = $request->years;
+        $head->MONTH = $request->months;
+        $head->STATUS = '1';
+        $head->PERCENTAGE = $percentage;
+        $head->save();
+
+        $hasil = array();
+        $i = 0;
+        $j = 0;
+        $k = 0;
+        foreach ($request->indicator_id as $data) 
+        {
+            $item = \DB::table('tm_indicator as t')
+            ->where('INDICATOR_ID', $data)->first();
+            $formuladb = $item->FORMULA;
+            if ($formuladb == '') 
+            {
+              $hasils = $request->actual[$j];
+            }
+            else
+            {
+                // $sub_ind = str_split($item->FORMULA, 1);
+                $pttn='+-/*()';   # standard mathematical operators
+                $pttn=sprintf('@([%s])@', preg_quote($pttn)); # an escaped/quoted pattern
+
+                $sub_ind=preg_split($pttn, preg_replace('@\s@', '', $item->FORMULA), -1, PREG_SPLIT_DELIM_CAPTURE);
+                foreach ($sub_ind as $split){
+                  if(is_numeric($split)){
+                        // dd($req['subreal_'.$data.'_'.$split]);
+                    $formuladb = str_replace($split, $req['subreal_'.$data.'_'.$split], $formuladb);
+                    $k = $k+1;
+                  }
+                }
+                // $hasils = eval('return '.$formuladb.';');
+                $hasils = eval('return '.str_replace(':', '/', $formuladb).';');
+              }
+
+            //Detil
+              $det = Det_Sarmut::where('INDICATOR_ID', '=', $data)
+              ->where('HEADER_SASARAN_MUTU_ID', '=', $header_sarmut_id)->first();
+              $det->ACTUAL_REALISASI = $hasils;
+              $det->KETERANGAN = $request->remark[$j];
+              $det->ALASAN = $request->alasan[$j];
+              $det->save();
+
+              $iddet = $det->DET_SASARAN_MUTU_ID;
+            // dd($iddet);
+            //Sub Detil
+              if ($formuladb <> '') {
+                $num_split = array();
+                foreach ($sub_ind as $split){
+                  if(is_numeric($split)){
+                    $formuladb = str_replace($split, $req['subreal_'.$data.'_'.$split], $formuladb);
+                    $sub_det = Sub_Det_Sarmut::where('SUB_INDICATOR_ID', '=', $split)
+                    ->where('DET_SASARAN_MUTU_ID', '=', $iddet)->first();
+                    $sub_det->ACTUAL_REALISASI = $req['subreal_'.$data.'_'.$split];
+                    $sub_det->save();
+                    $i = $i+1;
+                  }
+                }
+              }
+              array_push($hasil, $hasils);
+              $j = $j+1;
+
+            }
+        }
+    
 
         $modul = "TRANSACTION SARMUT";
 
@@ -1258,6 +1562,7 @@ public function save_tx_sarmut(Request $request)
         }else if(Auth::user()->ACCESS == 'VP SUB DIVISI' || Auth::user()->ACCESS == 'VP PENGENDALIAN KINERJA DAN JAMINAN MUTU')
         {
             $head = Head_Sarmut::where('HEADER_SASARAN_MUTU_ID', '=', $header_sarmut_id)->first();
+            //dd(header_sarmut_id);
             $status = '3';
             $head->STATUS = $status;
             $head->save();
@@ -1274,9 +1579,9 @@ public function save_tx_sarmut(Request $request)
 
     public function txsarmut_kembalikan(Request $request)
     {
-        // dd($request);
-
-        $item = Head_Sarmut::where('HEADER_SASARAN_MUTU_ID', '=', $request->id2)->first();
+        //dd($request->id2);
+        $header_sarmut_id = $request->id2;
+        $item = Head_Sarmut::where('HEADER_SASARAN_MUTU_ID', '=', $header_sarmut_id)->first();
         $item->STATUS = '4';
         $item->ALASAN_KEMBALIKAN = $request->alasan;
         $item->save();
@@ -1321,9 +1626,9 @@ public function save_tx_sarmut(Request $request)
         $disabled_list = array();
         $sub_disabled_list = array();
         foreach ($sarmut_list1 as $data) {
-        	if ($data->FORMULA <> '') {
-        		$disabled = 'disabled';
-        	}else{
+          if ($data->FORMULA <> '') {
+            $disabled = 'disabled';
+          }else{
                 $disabled = 'abled';
             }
             array_push($disabled_list, $disabled);
@@ -1357,9 +1662,9 @@ public function save_tx_sarmut(Request $request)
             // dd($data->INDICATOR_ID);
 
             $pttn='+-/*()';   # standard mathematical operators
-			$pttn=sprintf('@([%s])@', preg_quote($pttn)); # an escaped/quoted pattern
+      $pttn=sprintf('@([%s])@', preg_quote($pttn)); # an escaped/quoted pattern
 
-			$sub_ind=preg_split($pttn, preg_replace('@\s@', '', $data->FORMULA), -1, PREG_SPLIT_DELIM_CAPTURE);
+      $sub_ind=preg_split($pttn, preg_replace('@\s@', '', $data->FORMULA), -1, PREG_SPLIT_DELIM_CAPTURE);
             // dd($request->months[0]); 
             // dd($sub_ind);
             $num_split = array();
@@ -1435,13 +1740,20 @@ public function save_tx_sarmut(Request $request)
         // dd($target_ind_list);
      $years = array(date('Y'),date('Y')-1);
      $year = '';
-     $months = array("JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OKT","NOV","DES");
-
-     $mnow = $months[date('m')-1];
-     $mmin1 = $months[date('m')-2];
-     $monthss = array($mnow, $mmin1);
-        // dd($years);
-     $month = '';
+     $months = array('',"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OKT","NOV","DES");
+        
+    $thisMonth = date('m');
+    if ($thisMonth == 1) {
+        $lastMont = $thisMonth;
+        $lastMont1 = 12;
+    }else{
+        $lastMont1 = $thisMonth - 1;
+    }
+    $mNow = $months[(int)$thisMonth]; 
+    $mLast = $months[(int)$lastMont1]; 
+    $monthss = array($mNow, $mLast);
+        // dd($mLast);
+     // $month = '';
 
         // dd($sub_disabled_list);
      Session::put('targetind', $target_ind_list);
@@ -1494,13 +1806,16 @@ public function save_tx_sarmut(Request $request)
 
         $items = \DB::table('tx_header_sasaran_mutu as a')
         ->where('a.HEADER_SASARAN_MUTU_ID', '=', $request->id);
-
+    
         $header_sarmut = $items->first();
-        // dd($header_sarmut->HEADER_SASARAN_MUTU_ID);
+        //dd($header_sarmut->HEADER_SASARAN_MUTU_ID);
         $header_sarmut_id = $header_sarmut->HEADER_SASARAN_MUTU_ID;
         $selectedmonth = $header_sarmut->MONTH;
         $selectedyear = $header_sarmut->YEAR;
         $sapprove = $header_sarmut->STATUS;
+        $fileloc = $header_sarmut->FILE_UPLOAD;
+        $filename = $header_sarmut->FILE_NAME;
+        $isdeletefile = $header_sarmut->FILE_DELETE;
 
         $sub_list = array();
         $target_ind_list = array();
@@ -1608,13 +1923,24 @@ public function save_tx_sarmut(Request $request)
         }
         $years = array(date('Y'),date('Y')-1);
         $year = '';
-        $months = array("JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OKT","NOV","DES");
+        $months = array('',"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OKT","NOV","DES");
         
-        $mnow = $months[date('m')-1];
-        $mmin1 = $months[date('m')-2];
-        $monthss = array($mnow, $mmin1);
-        // dd($years);
-        $month = '';
+        $thisMonth = date('m');
+        if ($thisMonth == 1) {
+            $lastMont = $thisMonth;
+            $lastMont1 = 12;
+        }else{
+            $lastMont1 = $thisMonth - 1;
+        }
+        $mNow = $months[(int)$thisMonth]; 
+        $mLast = $months[(int)$lastMont1]; 
+        $monthss = array($mNow, $mLast);
+        
+        // $mnow = $months[date('m')-1];
+        // $mmin1 = $months[date('m')-2];
+        // $monthss = array($mnow, $mmin1);
+        // // dd($years);
+        // $month = '';
 
         // dd($sel_subtgtind_list[0][0]->SELECTED);
         Session::put('targetind', $target_ind_list);
@@ -1645,6 +1971,10 @@ public function save_tx_sarmut(Request $request)
             'months'     => $monthss,
             'month'     => $header_sarmut->MONTH,
             'status'     => $sapprove,
+            'getfile' => $fileloc,
+            'getfilename' => $filename,
+            'isdeleted' => $isdeletefile,
+            'id' => $request->id
         ]);
     }
 
@@ -1679,6 +2009,9 @@ public function save_tx_sarmut(Request $request)
         $selectedmonth = $header_sarmut->MONTH;
         $selectedyear = $header_sarmut->YEAR;
         $sapprove = $header_sarmut->STATUS;
+        $fileloc = $header_sarmut->FILE_UPLOAD;
+        $filename = $header_sarmut->FILE_NAME;
+        $isdeletefile = $header_sarmut->FILE_DELETE;
 
         $sub_list = array();
         $target_ind_list = array();
@@ -1786,13 +2119,25 @@ public function save_tx_sarmut(Request $request)
         }
         $years = array(date('Y'),date('Y')-1);
         $year = '';
-        $months = array("JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OKT","NOV","DES");
+
+        $months = array('',"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OKT","NOV","DES");
         
-        $mnow = $months[date('m')-1];
-        $mmin1 = $months[date('m')-2];
-        $monthss = array($mnow, $mmin1);
-        // dd($years);
-        $month = '';
+        $thisMonth = date('m');
+        if ($thisMonth == 1) {
+            $lastMont = $thisMonth;
+            $lastMont1 = 12;
+        }else{
+            $lastMont1 = $thisMonth - 1;
+        }
+        $mNow = $months[(int)$thisMonth]; 
+        $mLast = $months[(int)$lastMont1]; 
+        $monthss = array($mNow, $mLast);
+
+        // $mnow = $months[date('m')-1];
+        // $mmin1 = $months[date('m')-2];
+        // $monthss = array($mnow, $mmin1);
+        // // dd($years);
+        // $month = '';
 
         // dd($sel_subtgtind_list[0][0]->SELECTED);
         Session::put('targetind', $target_ind_list);
@@ -1823,7 +2168,24 @@ public function save_tx_sarmut(Request $request)
             'months'     => $monthss,
             'month'     => $header_sarmut->MONTH,
             'status'     => $sapprove,
+            'getfilename' => $filename,
+            'getfile' => $fileloc,
         ]);
+    }
+
+    public function form_input_sarmut_upload(Request $request){
+        return 'hai';
+        $file = $request->file('file');
+        $ext = $file->getClientOriginalExtension();
+        $nama_file = time()."_".$file->getClientOriginalName();
+        $tujuan_upload = 'sarmut';
+        $file->move($tujuan_upload, $nama_file);
+        
+        $simpan = new Sarmut_Upload();
+        $simpan->form_upload = $nama_file;
+        $simpan->save();
+
+        return redirect()->back();
     }
 
 //     public function excel_export(Request $request)
@@ -1988,6 +2350,7 @@ public function save_tx_sarmut(Request $request)
         
 
 //   }
+
 
 }
 

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>PT. Pelabuhan Tanjung Priuk</title>
+<title>PT. Pelabuhan Tanjung Priok</title>
 
 <link href="{{ URL::asset('templateslide/assets/css/style.css') }}" rel="stylesheet" type="text/css">
 <link href="{{ URL::asset('templateslide/assets/css/imagehover/imagehover.min.css') }}" rel="stylesheet" type="text/css">
@@ -46,10 +46,11 @@
 				<img src="{{ URL::asset('templateslide/assets/img/logo/ptpwhite.png') }}" class="fl-logo" onclick="location.href = '{{ url('dashboard')}}'">
 				
 				<span class="fl-title-logo">
-					E-Reporting PT. Pelabuhan Tanjung Priok	
+					E-Report PT. Pelabuhan Tanjung Priok	
 				</span>
 
 				<span class="fl-menu-tool">
+					<img src="{{ URL::asset('templateslide/assets/img/logo/Logo e-Report.png') }}" class="fl-logo">
 					<input type="button" class="uk-button uk-button-primary fl-button" value="menu" onclick="location.href = '{{ url('dashboard')}}'">
 				</span>
 			</div>	
@@ -60,7 +61,7 @@
 			<div class="fl-title-page" >
 				<span style="font-size:20px">				
 					<img class="uk-preserve-width uk-border-circle" src="{{ URL::asset('templateslide/assets/img/icon/sopReadMore.png') }}" width="65" alt="">
-					Standard Operational Procedure (SOP) Upload
+					Upload Standard Operational Procedure (SOP) 
 				</span>
 			</div>
 
@@ -72,7 +73,6 @@
                 <div>
                     <b>SOP File</b>
                     <input name="file" class="uk-input uk-child-width-1-2" type="file" placeholder="File">
-
                 <div>
                     <br>
                 </div>
@@ -94,6 +94,19 @@
 <script>
 	function showModal(){
 		UIkit.modal("#mymodal").show();
+	}
+
+	function fileValidation(file){
+		var fileInput = document.getElementById('file');
+		var filePath = fileInput.value;
+		var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif|\.pdf|\.xls|\.xlsx)$/i;
+		var FileSize = file.files[0].size / 20120 / 20120;
+		if(!allowedExtensions.exec(filePath) || FileSize > 20){
+			alert('file extension .jpeg/.jpg/.png/.pdf/.xls/.xlsx. size file max 20MB');
+			fileInput.value = '';
+			return false;
+
+		}
 	}
 
 	function save_organization_structure(formid)

@@ -27,7 +27,7 @@ class PTKAKController extends Controller
     public function ptkak_list(Request $request)
     {
         /*$value = $request->cookie('ORG_ID');
-        
+    
         $indicator_list = array();*/
         $org_id = Auth::user()->ORG_ID;
         $access = Auth::user()->ACCESS;
@@ -97,6 +97,7 @@ class PTKAKController extends Controller
             ->where('IS_DELETED', '0')
             ->Where('CREATED_ORG_ID', $org_id)
             ->orWhere('a.VERIFIED_STATUS_1', '1')
+            //->orWhere('a.TO_AUDITAN', $org_id)
             ->orderBy('a.created_at','DESC');
             $ptkak_list = $items->get();
             $now            = Carbon::now();
@@ -116,8 +117,10 @@ class PTKAKController extends Controller
             ->select('a.*','b.SUB_DIVISION_NAME as F_SUB_DIVISION_NAME','c.SUB_DIVISION_NAME as T_SUB_DIVISION_NAME')
             ->where('IS_DELETED', '0')
             ->where('CREATED_ORG_ID', $org_id)
+            //->orWhere('a.TO_AUDITAN', $org_id)
             ->orderBy('a.created_at','DESC');
             $ptkak_list = $items->get();
+        // dd($ptkak_list);
             $now            = Carbon::now();
             
             return view('ptkak.tabel_ptkak', [

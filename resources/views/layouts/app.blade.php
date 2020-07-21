@@ -52,6 +52,9 @@ License: You must have a valid license purchased only from themeforest(the above
 							<div class="m-login__wrapper">
 								<div class="m-login__logo">
 									<a href="#">
+										<img src="templateslide/assets/img/logo/Logo e-Report.png" class="fl-logo" height="70px">
+										<br/>
+										<br/>
 										<img src="{{ asset('templateslide/assets/img/logo/ptp.png') }}" width="200" height="100"> 
 									</a>
 								</div>

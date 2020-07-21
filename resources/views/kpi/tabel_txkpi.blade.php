@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>PT. Pelabuhan Tanjung Priuk</title>
+<title>PT. Pelabuhan Tanjung Priok</title>
 
 <link href="templateslide/assets/css/style.css" rel="stylesheet" type="text/css">
 <link href="templateslide/assets/css/imagehover/imagehover.min.css" rel="stylesheet" type="text/css">
@@ -49,17 +49,20 @@ body{
 		<!---Header----------->
 		<div class="fl-header fl-header-margin" uk-sticky>
 			<div>
-				<img src="templateslide/assets/img/logo/ptpwhite.png" class="fl-logo" onclick="location.href = '{{ url('dashboard')}}'">
+				<img src="{{ URL::asset('templateslide/assets/img/logo/ptpwhite.png') }}" class="fl-logo" onclick="location.href = '{{ url('dashboard')}}'">
 				
 				<span class="fl-title-logo">
-					E-Reporting PT. Pelabuhan Tanjung Priuk	
+					E-Report PT. Pelabuhan Tanjung Priok	
 				</span>
-
 				<span class="fl-menu-tool">
-					<!-- <button onclick="ExportExcel()" class="uk-button uk-button-primary fl-button" type="button">Export</button> -->
+					<img src="{{ URL::asset('templateslide/assets/img/logo/Logo e-Report.png') }}" class="fl-logo">
+					<a href="listexportdata"><button style="background-color : #FFDAB9 !important;" class="uk-button uk-button fl-button" type="button">Report</button></a>
 					<input type="button" class="uk-button uk-button-primary fl-button" value="menu" onclick="location.href = '{{ url('dashboard')}}'">
+					<a href="logout"><button class="uk-button uk-button-danger fl-button" type="button">Logout</button></a>
 				</span>
-				
+				<!-- <span class="fl-menu-tool">
+					<input type="button" class="uk-button uk-button-primary fl-button" value="menu" onclick="location.href = '{{ url('dashboard')}}'">
+				</span> -->
 			</div>	
 		</div>
 

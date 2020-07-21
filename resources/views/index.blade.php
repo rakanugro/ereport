@@ -49,11 +49,14 @@ body{
 			<img src="templateslide/assets/img/logo/ptpwhite.png" class="fl-logo">
 			
 			<span class="fl-title-logo">
-				E-Reporting PT. Pelabuhan Tanjung Priok
-			</span>
-
+					E-Report PT. Pelabuhan Tanjung Priok	
+			</span>			
+				
 			<span class="fl-menu-tool">
-				<a href="listexportdata"><button style="background-color : #FFDAB9 !important;" class="uk-button uk-button fl-button" type="button">Report</button></a>
+				<img src="templateslide/assets/img/logo/Logo e-Report.png" class="fl-logo">
+				@if(Auth::user()->ACCESS != "REPORT_ONLY")
+					<a href="listexportmenu"><button style="background-color : #FFDAB9 !important;" class="uk-button uk-button fl-button" type="button">Report</button></a>
+				@endif
 				<button class="uk-button uk-button-primary fl-button" onclick="Changepass({{$iduser}})" type="button">Change Password</button>
 
 				<a href="logout"><button class="uk-button uk-button-danger fl-button" type="button">Logout</button></a>
@@ -61,6 +64,7 @@ body{
 				<!-- <a href="/" class="uk-button uk-button-primary	 fl-button">MENU</a> -->
 			</span>
 		</div>
+
 		<div style="text-align:center">
 			<span class="fl-menu-logo" style="float:right !important;">
 				<label>Login as {{ Auth::user()->NAMA }}</label>
@@ -79,184 +83,231 @@ body{
 					<div class="fl-container">
 						<div uk-slider="clsActivated: uk-transition-active">
 							<ul class="uk-slider-items uk-child-width-1-1@s uk-child-width-1-1@ uk-grid">
-									
 								<li>
 									<div uk-grid class="uk-grid-small uk-child-width-1-1 uk-child-width-1-4@m uk-child-width-1-2@s">
-										
-										<div>
-											<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color1">
-												<table>
-													<tr>
-														<td>
-															<!-- @if(Auth::user()->ACCESS == "SUPERADMIN" || Auth::user()->ACCESS == "ADMIN MUTU")
-															<img src="templateslide/assets/img/image/fl1.jpg" class="fl-image-figure" onclick="showModalsarmut()">																											
-															@else -->
-															<a href="txsarmut"> <img src="templateslide/assets/img/image/fl1.jpg" class="fl-image-figure"></a>
-															<!-- @endif -->
-														</td>
-													</tr>
-												</table>								    
+										@if(Auth::user()->ACCESS == "REPORT_ONLY")
+											<div><div><table><tr><td></td></tr></table></div></div>
+											<div>
+												<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color1">
+													<table>
+														<tr>
+															<td>
+																<a onclick="generateindikatorpusat()"> <img src="templateslide/assets/img/image/Sarmut_Pusat.jpg" class="fl-image-figure"></a>
+															</td>
+														</tr>
+													</table>								    
+												</div>
 											</div>
-										</div>
-
-										@if(Auth::user()->ACCESS == "VP PENGENDALIAN KINERJA DAN JAMINAN MUTU" || Auth::user()->ACCESS == "DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU" || Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU")
-										<div>
-											<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color2">
-											    <table>
-													<tr>
-														<td>
-															<a href="txkpi"> <img src="templateslide/assets/img/image/fl2.jpg" class="fl-image-figure"></a>
-														</td>
-													</tr>
-												</table>
+											<div>
+												<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color1">
+													<table>
+														<tr>
+															<td>
+																<a onclick="generateindikatorcabang()"> <img src="templateslide/assets/img/image/Sarmut_Cabang.jpg" class="fl-image-figure"></a>
+															</td>
+														</tr>
+													</table>								    
+												</div>
 											</div>
-										</div>
+											<div><div><table><tr><td></td></tr></table></div></div>
+											<div><div><table><tr><td></td></tr></table></div></div>
+											<div>
+												<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color1">
+													<table>
+														<tr>
+															<td>
+																<a onclick="generatekpipusat()"> <img src="templateslide/assets/img/image/KPI_Pusat.jpg" class="fl-image-figure"></a>
+															</td>
+														</tr>
+													</table>								    
+												</div>
+											</div>
+											<div>
+												<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color1">
+													<table>
+														<tr>
+															<td>
+																<a onclick="generatekpicabang()"> <img src="templateslide/assets/img/image/KPI_Cabang.jpg" class="fl-image-figure"></a>
+															</td>
+														</tr>
+													</table>								    
+												</div>
+											</div>
+											<div><div><table><tr><td></td></tr></table></div></div>
 										@else
-										<div>
-											<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-colordisbled">
-											    <table>
-													<tr>
-														<td>
-															<a href="#" onclick="nohakakses()" disabled="disabled"> <img src="templateslide/assets/img/image/kpi_disable.jpeg" class="fl-image-figure"></a>
-					
-														</td>
-													</tr>
-												</table>
+											<div>
+												<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color1">
+													<table>
+														<tr>
+															<td>
+																<!-- @if(Auth::user()->ACCESS == "SUPERADMIN" || Auth::user()->ACCESS == "ADMIN MUTU")
+																<img src="templateslide/assets/img/image/fl1.jpg" class="fl-image-figure" onclick="showModalsarmut()">																											
+																@else -->
+																<a href="txsarmut"> <img src="templateslide/assets/img/image/fl1.jpg" class="fl-image-figure"></a>
+																<!-- @endif -->
+															</td>
+														</tr>
+													</table>								    
+												</div>
 											</div>
-										</div>
-										@endif
 
-										@if(Auth::user()->ACCESS == "VP PENGENDALIAN KINERJA DAN JAMINAN MUTU" || Auth::user()->ACCESS == "DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU" || Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU")
-										<div>
-											<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color5">
-											    <table>
-													<tr>
-														<td>
-															<a href="txtkp"> <img src="templateslide/assets/img/image/fl5.jpeg" class="fl-image-figure"></a>								
-														</td>
-													</tr>
-												</table>
+											@if(Auth::user()->ACCESS == "VP PENGENDALIAN KINERJA DAN JAMINAN MUTU" || Auth::user()->ACCESS == "DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU" || Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU")
+											<div>
+												<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color2">
+													<table>
+														<tr>
+															<td>
+																<a href="txkpi"> <img src="templateslide/assets/img/image/fl2.jpg" class="fl-image-figure"></a>
+															</td>
+														</tr>
+													</table>
+												</div>
 											</div>
-										</div>
-										@else
-										<div>
-											<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-colordisbled">
-											    <table>
-													<tr>
-														<td>
-															<a href="#" onclick="nohakakses()" disabled="disabled"> <img src="templateslide/assets/img/image/tkp_disable.jpeg" class="fl-image-figure"></a>		
-														</td>
-													</tr>
-												</table>
+											@else
+											<div>
+												<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-colordisbled">
+													<table>
+														<tr>
+															<td>
+																<a href="#" onclick="nohakakses()" disabled="disabled"> <img src="templateslide/assets/img/image/kpi_disable.jpeg" class="fl-image-figure"></a>
+						
+															</td>
+														</tr>
+													</table>
+												</div>
 											</div>
-										</div>
-										@endif
+											@endif
 
-										
-										<div>
-											<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color7">
-										    <table>
-													<tr>
-														<td>
-															<!-- @if(Auth::user()->ACCESS == "SUPERADMIN" || Auth::user()->ACCESS == "ADMIN MUTU")
-															<img src="templateslide/assets/img/image/fl7.jpg" class="fl-image-figure" onclick="showModalptkak()">																											
-															@else -->
-															<a href="ptkaklist"> <img src="templateslide/assets/img/image/fl7.jpg" class="fl-image-figure"></a>
-															<!-- @endif -->
-														</td>
-													</tr>
-												</table>
+											@if(Auth::user()->ACCESS == "VP PENGENDALIAN KINERJA DAN JAMINAN MUTU" || Auth::user()->ACCESS == "DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU" || Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU")
+											<div>
+												<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color5">
+													<table>
+														<tr>
+															<td>
+																<a href="txtkp"> <img src="templateslide/assets/img/image/fl5.jpeg" class="fl-image-figure"></a>								
+															</td>
+														</tr>
+													</table>
+												</div>
 											</div>
-										</div>
+											@else
+											<div>
+												<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-colordisbled">
+													<table>
+														<tr>
+															<td>
+																<a href="#" onclick="nohakakses()" disabled="disabled"> <img src="templateslide/assets/img/image/tkp_disable.jpeg" class="fl-image-figure"></a>		
+															</td>
+														</tr>
+													</table>
+												</div>
+											</div>
+											@endif
 
-										<div>
-											<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color8">
-											    <table>
-													<tr>
-														<td>
-															<!-- @if(Auth::user()->ACCESS == "SUPERADMIN" || Auth::user()->ACCESS == "ADMIN MUTU")
-															<img src="templateslide/assets/img/image/fl6.jpg" class="fl-image-figure" onclick="showModalsop()">																											
-															@else -->
-															<a href="sop_list"> <img src="templateslide/assets/img/image/fl6.jpg" class="fl-image-figure"></a>
-															<!-- @endif		 -->
-														</td>
-													</tr>
-												</table>
+											<div>
+												<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color7">
+													<table>
+														<tr>
+															<td>
+																<!-- @if(Auth::user()->ACCESS == "SUPERADMIN" || Auth::user()->ACCESS == "ADMIN MUTU")
+																<img src="templateslide/assets/img/image/fl7.jpg" class="fl-image-figure" onclick="showModalptkak()">																											
+																@else -->
+																<a href="ptkaklist"> <img src="templateslide/assets/img/image/fl7.jpg" class="fl-image-figure"></a>
+																<!-- @endif -->
+															</td>
+														</tr>
+													</table>
+												</div>
 											</div>
-										</div>
+									
+											<div>
+												<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color8">
+													<table>
+														<tr>
+															<td>
+																<!-- @if(Auth::user()->ACCESS == "SUPERADMIN" || Auth::user()->ACCESS == "ADMIN MUTU")
+																<img src="templateslide/assets/img/image/fl6.jpg" class="fl-image-figure" onclick="showModalsop()">																											
+																@else -->
+																<a href="sop_list"> <img src="templateslide/assets/img/image/fl6.jpg" class="fl-image-figure"></a>
+																<!-- @endif		 -->
+															</td>
+														</tr>
+													</table>
+												</div>
+											</div>
 
+											@if(Auth::user()->ACCESS == "VP PENGENDALIAN KINERJA DAN JAMINAN MUTU" || Auth::user()->ACCESS == "DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU" || Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU" || Auth::user()->ACCESS == "VP SUB DIVISI" || Auth::user()->ACCESS == "DVP SUB DIVISI")
+											<div>
+												<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color3">
+													<table>
+														<tr>
+															<td>
+																<!-- @if(Auth::user()->ACCESS == "SUPERADMIN" || Auth::user()->ACCESS == "ADMIN MUTU")
+																<img src="templateslide/assets/img/image/fl3.jpg" class="fl-image-figure" onclick="showModalmanagementreport()">																											
+																@else -->
+																<a href="management_report_index"> <img src="templateslide/assets/img/image/fl3.jpg" class="fl-image-figure"></a>
+																<!-- @endif																											 -->
+															</td>
+														</tr>
+													</table>
+												</div>
+											</div>
+											@else
+											<div>
+												<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-colordisbled">
+													<table>
+														<tr>
+															<td>
+																<a href="#" onclick="nohakakses()" disabled="disabled"> <img src="templateslide/assets/img/image/managemen_report_disable.jpeg" class="fl-image-figure"></a>
+						
+															</td>
+														</tr>
+													</table>
+												</div>
+											</div>
+											@endif
+											
+											<div>
+												<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color4">
+													<table>
+														<tr>
+															<td>
+																<!-- @if(Auth::user()->ACCESS == "SUPERADMIN" || Auth::user()->ACCESS == "ADMIN MUTU")
+																<img src="templateslide/assets/img/image/fl4.jpg" class="fl-image-figure" onclick="showModaldokumenpendukung()">																											
+																@else -->
+																<a href="dokumen_pendukung"> <img src="templateslide/assets/img/image/fl4.jpg" class="fl-image-figure"></a>
+																<!-- @endif																												 -->
+															</td>
+														</tr>
+													</table>
+												</div>
+											</div>
 
-										@if(Auth::user()->ACCESS == "VP PENGENDALIAN KINERJA DAN JAMINAN MUTU" || Auth::user()->ACCESS == "DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU" || Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU" || Auth::user()->ACCESS == "VP SUB DIVISI" || Auth::user()->ACCESS == "DVP SUB DIVISI")
-										<div>
-											<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color3">
-												<table>
-													<tr>
-														<td>
-															<!-- @if(Auth::user()->ACCESS == "SUPERADMIN" || Auth::user()->ACCESS == "ADMIN MUTU")
-															<img src="templateslide/assets/img/image/fl3.jpg" class="fl-image-figure" onclick="showModalmanagementreport()">																											
-															@else -->
-															<a href="management_report_index"> <img src="templateslide/assets/img/image/fl3.jpg" class="fl-image-figure"></a>
-															<!-- @endif																											 -->
-														</td>
-													</tr>
-												</table>
+											@if(Auth::user()->ACCESS == "VP PENGENDALIAN KINERJA DAN JAMINAN MUTU" || Auth::user()->ACCESS == "DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU" || Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU")
+											<div>
+												<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color10">
+													<table>
+														<tr>
+															<td>
+																<a href="master_menu"><img src="templateslide/assets/img/image/fl8.jpg" class="fl-image-figure"></a>	
+															</td>
+														</tr>
+													</table>
+												</div>
 											</div>
-										</div>
-										@else
-										<div>
-											<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-colordisbled">
-											    <table>
-													<tr>
-														<td>
-															<a href="#" onclick="nohakakses()" disabled="disabled"> <img src="templateslide/assets/img/image/managemen_report_disable.jpeg" class="fl-image-figure"></a>
-					
-														</td>
-													</tr>
-												</table>
+											@else
+											<div>
+												<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-colordisbled">
+													<table>
+														<tr>
+															<td>
+																<a href="#" onclick="nohakakses()"><img src="templateslide/assets/img/image/master_data_disable.jpeg" class="fl-image-figure"></a>
+															</td>
+														</tr>
+													</table>
+												</div>
 											</div>
-										</div>
-										@endif
-
-										<div>
-											<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color4">
-												<table>
-													<tr>
-														<td>
-															<!-- @if(Auth::user()->ACCESS == "SUPERADMIN" || Auth::user()->ACCESS == "ADMIN MUTU")
-															<img src="templateslide/assets/img/image/fl4.jpg" class="fl-image-figure" onclick="showModaldokumenpendukung()">																											
-															@else -->
-															<a href="dokumen_pendukung"> <img src="templateslide/assets/img/image/fl4.jpg" class="fl-image-figure"></a>
-															<!-- @endif																												 -->
-														</td>
-													</tr>
-												</table>
-											</div>
-										</div>
-
-										@if(Auth::user()->ACCESS == "VP PENGENDALIAN KINERJA DAN JAMINAN MUTU" || Auth::user()->ACCESS == "DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU" || Auth::user()->ACCESS == "ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU")
-										<div>
-											<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-color10">
-												<table>
-													<tr>
-														<td>
-															<a href="master_menu"><img src="templateslide/assets/img/image/fl8.jpg" class="fl-image-figure"></a>	
-														</td>
-													</tr>
-												</table>
-											</div>
-										</div>
-										@else
-										<div>
-											<div class="uk-card uk-card-default uk-card-body fl-menu-box fl-box-colordisbled">
-												<table>
-													<tr>
-														<td>
-															<a href="#" onclick="nohakakses()"><img src="templateslide/assets/img/image/master_data_disable.jpeg" class="fl-image-figure"></a>
-														</td>
-													</tr>
-												</table>
-											</div>
-										</div>
+											@endif
 										@endif	
 									</div>	
 								</li>
@@ -745,6 +796,26 @@ body{
 			timer:3000
 		});
 	}
+
+	function generateindikatorcabang()
+    {
+        window.open("{{ url('/listexportdata/IndicatorSasaranMutuCabang') }}");
+    }
+
+	function generateindikatorpusat()
+    {
+        window.open("{{ url('/listexportdata/IndicatorSasaranMutuPusat') }}");
+    }
+	
+	function generatekpipusat()
+    {
+        window.open("{{ url('/listexportdata/ReportKPIPusat') }}");
+    }
+
+    function generatekpicabang()
+    {
+        window.open("{{ url('/listexportdata/ReportKPICabang') }}");
+    }
 
 
 	$(".select2-list").select2({

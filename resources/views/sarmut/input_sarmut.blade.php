@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>PT. Pelabuhan Tanjung Priuk</title>
+<title>PT. Pelabuhan Tanjung Priok</title>
 
 <link href="{{ URL::asset('templateslide/assets/css/style.css') }}" rel="stylesheet" type="text/css">
 <link href="{{ URL::asset('templateslide/assets/css/imagehover/imagehover.min.css') }}" rel="stylesheet" type="text/css">
@@ -54,18 +54,21 @@
 				<img src="{{ URL::asset('templateslide/assets/img/logo/ptpwhite.png') }}" class="fl-logo" onclick="location.href = '{{ url('dashboard')}}'">
 				
 				<span class="fl-title-logo">
-					E-Reporting PT. Pelabuhan Tanjung Priok	
+					E-Report PT. Pelabuhan Tanjung Priok	
 				</span>
-
 				<span class="fl-menu-tool">
+					<img src="{{ URL::asset('templateslide/assets/img/logo/Logo e-Report.png') }}" class="fl-logo">
 					<input type="button" class="uk-button uk-button-primary fl-button" value="menu" onclick="location.href = '{{ url('dashboard')}}'">
 				</span>
+				<!-- <span class="fl-menu-tool">
+					<input type="button" class="uk-button uk-button-primary fl-button" value="menu" onclick="location.href = '{{ url('dashboard')}}'">
+				</span> -->
 			</div>	
 		</div>
 
-
-		<div class="fl-container">
-			<div class="fl-title-page" >
+ 
+		<div class="fl-container"> 
+			<div class="fl-title-page"> 
 				<span style="font-size:20px">				
 					<img class="uk-preserve-width uk-border-circle" src="templateslide/assets/img/icon/sopReadMore.png" width="65" alt="">
 					Input Sasaran Mutu Per {{ $month }} {{ $year }}
@@ -73,9 +76,27 @@
 				<span style="float:right;margin-top:15px; color: red;">
 					Note* (Kalau keterangan dipilih, maka realisasi tidak dapat diubah)
 				</span>
+				<div class="form-group m-form__group row">
+				<form id="form_sarmut" action="/txsarmut/sarmut_save" method="POST" enctype="multipart/form-data">	
+					<div class="col-lg-8">
+						<label class="custom-file">
+							<input type="file" id="file" name="file" class="btn btn-submit" onchange="return fileValidation(this);">
+							<!-- <div class="col-sm-12">max size file 5MB & file format .jpeg/.jpg/.png/.pdf</div> -->
+							<!-- <span class="custom-file-control">Choose File...</span> -->
+						</label>
+					</div>
+				</div>
+					<!-- <form method="POST" enctype="multipart/form-data" action="{{url('input_sarmut_upload')}}"> -->
+					<!-- <input type="file" name="file" style="color: black;"> -->
+					<!-- <a href="input_sarmut_upload/">up</a> -->
+					<!-- <button class="uk-button uk-button-primary fl-button">
+						<i class="fa fa-plus"></i>&nbsp;Upload
+					</button> --><!-- 
+					</form> -->
+				</div>
+				<br>
 			</div>
 			
-		<form id="form_sarmut" action="/txsarmut/sarmut_save" method="POST">	
 			<div class="col-md-12 fl-table">
 				{{ csrf_field() }}
 				<input type="hidden" name="years" id="years" value="{{ $year }}"><br>
@@ -83,9 +104,9 @@
 					
 				<div class="uk-overflow-auto">
 				
-					<table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
+					<table class="uk-table uk-table-hover uk-table-middle uk-table-divider" style="width: 100% !important;">
 						<thead>
-							<tr class="fl-table-head">
+							<tr class="fl-table-head" valign="middle">
 								<th width="5%"></th>
 								<th width="15%">Sub Divisi</th>
 								<th width="25%">Indicator Name</th>
@@ -93,10 +114,11 @@
 								<th width="5%">Satuan</th>
 								<th width="5%">Polaritas</th>
 								<th width="5%">Target</th>
-								<th width="15%">Realisasi</th>
-								<th width="15%">Keterangan</th>
-								<th width="15%">Alasan</th>
-								<th width="10%"></th>
+								<th width="10%">Realisasi</th>
+								<th style="text-align: center;" width="10%">Keterangan</th>
+								<th style="text-align: center;" width="10%">Alasan</th>
+								<!-- <th div style="display: none;" width="15%">File Upload</th> -->
+								<!-- <th width="10%"></th> -->
 							</tr>
 						</thead>
 						<?php $i = 0 ?>
@@ -116,35 +138,42 @@
 									@if( $data->INPUTABLE == "Y")
 									<input style="width: 100% !important;" class="col-md-10 uk-input" type="number" step="any" name="actual[]" id="actual{{$i}}" value="{{ $hasil[$i] <> null ? $hasil[$i] : 0 }}"></td>
 									@elseif( $data->INPUTABLE == "N" )
-									<input style="width: 100% !important; background-color: #f0f5f5	 !important;" class="col-md-10 uk-input" type="number" readonly="readonly" step="any" name="actual[]" id="actual{{$i}}" value="{{ $hasil[$i] <> null ? $hasil[$i] : 0 }}"></td>
+									<input style="width: 100% !important; background-color: red !important;" class="col-md-10 uk-input" type="number" readonly="readonly" step="any" name="actual[]" id="actual{{$i}}" value="{{ $hasil[$i] <> null ? $hasil[$i] : 0 }}"></td>
 									@endif
 								<td>
 									@if($data->INPUTABLE == "Y" )
-									<select style="width: 100% !important;" id="remark{{$i}}" class="form-control select2-list" name="remark[]" required="required" onchange="changetextbox('remark{{$i}}','actual{{$i}}')">
+									<select style="width: 100% !important;" id="remark{{$i}}" class="form-control select2-list" name="remark[]" required="required" onchange="changetextbox('remark{{$i}}','actual{{$i}}','alasan{{$i}}')">
 										<option value="-">--Keterangan--</option>
-										<option value="Tidak Ada Kegiatan">Tidak Ada Kegiatan</option>
+										<option value="Tidak Ada Kegiatan">Not Available</option>
 										<option value="Data Kurang">Data Kurang</option>
 									</select>
 									@elseif( $data->INPUTABLE == "N" )
-									<input type="text" style="width: 100% !important; background-color: #f0f5f5	 !important;" id="remark{{$i}}" class="form-control" name="remark[]" value="Belum Diukur" readonly="readonly">
+									<input type="text" style="width: 100% !important; background-color: red	 !important;" id="remark{{$i}}" class="form-control" name="remark[]" value="Belum Diukur" readonly="readonly">
 									@endif
 								</td>
 								<td>
 									<select style="width: 110% !important;" id="alasan{{$i}}" class="form-control select2-list" name="alasan[]" required="required">
 										<option value="-">--Alasan--</option>
-										<option value="Faktor Cuaca Hujan">Faktor Cuaca Hujan</option>
-										<option value="Dimensi Barang Beragam">Dimensi Barang Beragam</option>
-										<option value="TKBM Belum Optimal">TKBM Belum Optimal</option>
-										<option value="Tempat Penumpukan Jauh">Tempat Penumpukan Jauh</option>
-										<option value="Kemasan Mudah Rusak">Kemasan Mudah Rusak</option>
-										<option value="Menunggu Kesiapan Suhu Muatan">Menunggu Kesiapan Suhu Muatan</option>
-										<option value="Pola Operasi Yang Tidak Tepat">Pola Operasi Yang Tidak Tepat</option>
-										<option value="Ada Masalah Vendor">Ada Masalah Vendor</option>
-										<option value="Sumber Daya Tidak Tersedia">Sumber Daya Tidak Tersedia</option>
-										<option value="Lama Approved Atasan">Lama Approved Atasan</option>
-										<option value="Menunggu Data Dari Bagian Lain">Menunggu Data Dari Bagian Lain</option>
-										<option value="Kegiatan Dibatalkan">Kegiatan Dibatalkan</option>
-										<option value="Kegiatan Diundur">Kegiatan Diundur</option>
+										<option value="Faktor Cuaca Hujan">1. Faktor Cuaca Hujan</option>
+										<option value="Dimensi Barang Beragam">2. Dimensi Barang Beragam</option>
+										<option value="TKBM Belum Optimal">3. TKBM Belum Optimal</option>
+										<option value="Tempat Penumpukan Jauh">4. Tempat Penumpukan Jauh</option>
+										<option value="Kemasan Mudah Rusak">5. Kemasan Mudah Rusak</option>
+										<option value="Menunggu Kesiapan Suhu Muatan">6. Menunggu Kesiapan Suhu Muatan</option>
+										<option value="Pola Operasi Yang Tidak Tepat">7. Pola Operasi Yang Tidak Tepat</option>
+										<option value="Ada Masalah Vendor">8. Ada Masalah Vendor</option>
+										<option value="Sumber Daya Tidak Tersedia">9. Sumber Daya Tidak Tersedia</option>
+										<option value="Lama Approved Atasan">10. Lama Approved Atasan</option>
+										<option value="Menunggu Data Dari Bagian Lain">11. Menunggu Data Dari Bagian Lain</option>
+										<option value="Kegiatan Dibatalkan">12. Kegiatan Dibatalkan</option>
+										<option value="Kegiatan Diundur">13. Kegiatan Diundur</option>
+										<option value="roses Gagal / Di Ulang">14. Proses Gagal / Di Ulang</option>
+										<option value="Anggaran Terbatas">15. Anggaran Terbatas</option>
+										<option value="Belum Ada Kebijakan">16. Belum Ada Kebijakan</option>
+										<option value="Menunggu Hasil Kajian">17. Menunggu Hasil Kajian</option>
+										<option value="Menunggu Proses SISKAKU Cabang IPC">18. Menunggu Proses SISKAKU Cabang IPC</option>
+										<option value="Kegiatan Belum Terjadwal">19. Kegiatan Belum Terjadwal</option>
+										<option value="Menunggu Verifikasi Bagian Lain">20. Menunggu Verifikasi Bagian Lain</option>
 									</select>
 								</td>
 								<td></td>
@@ -236,6 +265,20 @@
 
 <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script> -->
 <script type="text/javascript">
+
+	function fileValidation(file){
+		var fileInput = document.getElementById('file');
+		var filePath = fileInput.value;
+		var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif|\.pdf|\.xls|\.xlsx)$/i;
+		var FileSize = file.files[0].size / 15120 / 15120;
+		if(!allowedExtensions.exec(filePath) || FileSize > 15){
+			alert('file extension .jpeg/.jpg/.png/.pdf/.xls/.xlsx. size file max 15MB');
+			fileInput.value = '';
+			return false;
+
+		}
+	}
+
     function showModal(){
 		UIkit.modal("#mymodal").show();
 	}
@@ -245,20 +288,23 @@
 		submit_form(formid);
     }
 
-    function changetextbox(a,b)
+    function changetextbox(a,b,z)
     {
     	var e = document.getElementById(a);
     	var c = e.options[e.selectedIndex].value;
-    	//alert(c);
+
     	if (c == "-") {
     		document.getElementById(b).readOnly = false;
     		document.getElementById(b).style.color = "black";
     		document.getElementById(b).style.backgroundColor = "white";
+    		//document.getElementById(z).disabled = false;
     	} 
     	else if(c == "Tidak Ada Kegiatan") {
     		document.getElementById(b).readOnly = true;
     		document.getElementById(b).style.color = "blue";
     		document.getElementById(b).value = "0";
+    		//document.getElementById(z).disabled  = true;
+
     		// document.getElementById(b).style.backgroundColor = "gray";
     	}
     	else
@@ -266,6 +312,7 @@
     		document.getElementById(b).readOnly = true;
     		document.getElementById(b).style.color = "red";
     		document.getElementById(b).value = "0";
+    		//document.getElementById(z).disabled = false;
     		// document.getElementById(b).style.backgroundColor = "gray";
     	}
     }

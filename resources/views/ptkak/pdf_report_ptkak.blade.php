@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>PT. Pelabuhan Tanjung Priuk</title>
+  <title>PT. Pelabuhan Tanjung Priok</title>
 </head>
 
 <body>
@@ -146,7 +146,7 @@
     <td height="78" colspan="7">{{$items->FIRST_ACT}}</td>
   </tr>
    <tr style="background-color: #d1e0e0;">
-    <td colspan="7" style="padding: 10px;"><b>Akar Penyebab</b></td>
+    <td colspan="7" style="padding: 10px;"><b>Tindakan Pencegahan</b></td>
   </tr>
    <tr>
     <td height="78" colspan="7">{{$items->CAUSE}}</td>

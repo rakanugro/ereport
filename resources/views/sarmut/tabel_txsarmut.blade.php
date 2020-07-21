@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>PT. Pelabuhan Tanjung Priuk</title>
+<title>PT. Pelabuhan Tanjung Priok</title>
 
 <link href="{{ URL::asset('templateslide/assets/css/style.css') }}" rel="stylesheet" type="text/css">
 <link href="{{ URL::asset('templateslide/assets/css/imagehover/imagehover.min.css') }}" rel="stylesheet" type="text/css">
@@ -52,12 +52,17 @@ body{
 				<img src="{{ URL::asset('templateslide/assets/img/logo/ptpwhite.png') }}" class="fl-logo" onclick="location.href = '{{ url('dashboard')}}'">
 				
 				<span class="fl-title-logo">
-					E-Reporting PT. Pelabuhan Tanjung Priuk	
+					E-Report PT. Pelabuhan Tanjung Priok	
 				</span>
-
 				<span class="fl-menu-tool">
+					<img src="{{ URL::asset('templateslide/assets/img/logo/Logo e-Report.png') }}" class="fl-logo">
+					<a href="listexportdata"><button style="background-color : #FFDAB9 !important;" class="uk-button uk-button fl-button" type="button">Report</button></a>
 					<input type="button" class="uk-button uk-button-primary fl-button" value="menu" onclick="location.href = '{{ url('dashboard')}}'">
+					<a href="logout"><button class="uk-button uk-button-danger fl-button" type="button">Logout</button></a>
 				</span>
+				<!-- <span class="fl-menu-tool">
+					<input type="button" class="uk-button uk-button-primary fl-button" value="menu" onclick="location.href = '{{ url('dashboard')}}'">
+				</span> -->
 			</div>	
 		</div>
 
@@ -71,10 +76,13 @@ body{
 				<span style="float:right;margin-top:15px">
 					<!-- <a href="sarmut"><button class="uk-button uk-button-default fl-button" type="button">Master Sasaran Mutu</button></a> -->
 					<!-- <button onclick="location.href = '{{ url('input_sarmut')}}'" class="uk-button uk-button-primary fl-button" type="button">+</button> -->
-					@if(Auth::user()->ACCESS == 'VP PENGENDALIAN KINERJA DAN JAMINAN MUTU' || Auth::user()->ACCESS == 'VP SUB DIVISI')
+					<!-- @if(Auth::user()->ACCESS == 'VP PENGENDALIAN KINERJA DAN JAMINAN MUTU' || Auth::user()->ACCESS == 'VP SUB DIVISI')
 					<button onclick="location.href = '{{ url('txsarmut')}}'" class="uk-button uk-button-success fl-button" type="button">List</button>
 					<button class="uk-button uk-button-default fl-button" type="button" onclick="showModalfilter()">Filter</button>
 					@elseif(Auth::user()->ACCESS == 'ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU' || Auth::user()->ACCESS == 'ADMIN SUB DIVISI')
+					<button onclick="showModalBulan()" class="uk-button uk-button-primary fl-button" type="button">+</button>
+					@endif -->
+					@if(Auth::user()->ACCESS == 'ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU' || Auth::user()->ACCESS == 'ADMIN SUB DIVISI')
 					<button onclick="showModalBulan()" class="uk-button uk-button-primary fl-button" type="button">+</button>
 					@endif
 				</span>
@@ -95,34 +103,33 @@ body{
 					<table class="uk-table uk-table-hover uk-table-middle uk-table-divider" id="sarmuttx_list">
 						<thead>
 							<tr class="fl-table-head">
-								<th width="5%"></th>
-								<th width="22%">Periode</th>
-								<th width="22%">Cabang</th>
-								<th width="20%">Divisi</th>
-								<th width="15%">Sub Divisi</th>
-								<th width="15%">Percentage(%)</th>
-								<th width="15%">Status</th>
-								<th width="20%">Action</th>
+								<th style="text-align: left !important;" width="22%">Periode</th>
+								<th style="text-align: left !important;" width="22%">Directorate</th>
+								<th style="text-align: left !important;" width="20%">Divisi/Cabang</th>
+								<th style="text-align: left !important;" width="20%">Sub Divisi</th>
+								<th style="text-align: center !important;" width="15%">Percentage(%)</th>
+								<th style="text-align: center !important;" width="15%">Status</th>
+								<th style="text-align: center !important;" width="20%">Action</th>
 							</tr>
 						</thead>
 						<tbody>
 							@foreach($txsarmut_list as $data)
 								<tr>
-									<td><img class="uk-preserve-width uk-border-circle" src="{{ URL::asset('templateslide/assets/img/icon/i1.png') }}" width="45" alt=""></td>
-									<td>{{ $data->MONTH }} {{ $data->YEAR }}</td>
-									<td>{{ $data->BRANCH_OFFICE_NAME }}</td>
-									<td>{{ $data->DIVISION_NAME }}</td>
-									<td>{{ $data->SUB_DIVISION_NAME }}</td>
+									<!-- <td style="text-align: left !important;">{{ $data->YEAR }}</td> -->
+									<td style="text-align: left !important;">{{ $data->MONTHS }}({{ $data->MONTH }}) {{ $data->YEAR }}</td>
+									<td style="text-align: left !important;">{{ $data->DIRECTORATE_NAME }}</td>
+									<td style="text-align: left !important;">{{ $data->DIVISION_NAME }}</td>
+									<td style="text-align: left !important;">{{ $data->SUB_DIVISION_NAME }}</td>
 									<td style="text-align: center !important;">{{ $data->PERCENTAGE }} %</td>
-									<td>
+									<td style="text-align: center !important;">
 										@if($data->STATUS == '1')
-									 		<span style="color:red">Menunggu Approval DVP/DGM</span>
+									 		<span style="color:red">1/3</span>
 									 	@elseif($data->STATUS == '2')
-									 		<span style="color:red">Menunggu Approval VP/GM</span>
+									 		<span style="color:red">2/3</span>
 									 	@elseif($data->STATUS == '3')
-									 		<span style="color:green">Approved</span>
+									 		<span style="color:green">3/3</span>
 									 	@elseif($data->STATUS == '4')
-											 <span style="color:red">Dikembalikan DVP/VP ({{$data->ALASAN_KEMBALIKAN}})</span>
+											 <span style="color:red">4/3 ({{$data->ALASAN_KEMBALIKAN}})</span>
 									 	@endif
 									</td>
 									<td>
@@ -132,18 +139,19 @@ body{
 												<li><a href="/txsarmut/detail/form_txsarmut/{{ $data->SASARAN_MUTU_ID }}">Detail</a></li>
 												<!-- <li><a href="/{{ $data->SASARAN_MUTU_ID }}">Delete</a></li> -->
 												@if((Auth::user()->ACCESS == 'DVP SUB DIVISI' && Auth::user()->ORG_ID == $data->ORGANIZATION_STRUCTURE_ID && $data->STATUS == '1' || Auth::user()->ACCESS == 'DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU' && Auth::user()->ORG_ID == $data->ORGANIZATION_STRUCTURE_ID && $data->STATUS == '1'))
-													<li><a href="javascript:;" onclick="Approval({{ $data->SASARAN_MUTU_ID }})">Approve</a></li>
-													<li><a href="javascript:;" onclick="Kembalikan({{ $data->SASARAN_MUTU_ID }})">Kembalikan</a></li>
+													<li><a href="javascript:;" onclick="Approval('{{ $data->MONTH }}'+'|-|'+{{ $data->YEAR }}+'|-|'+'{{ $data->SUB_DIVISION_NAME }}'+'|-|'+{{ $data->SASARAN_MUTU_ID }})">Approve</a></li>
+													<li><a href="javascript:;" onclick="Kembalikan('{{ $data->MONTH }}'+'|-|'+{{ $data->YEAR }}+'|-|'+'{{ $data->SUB_DIVISION_NAME }}'+'|-|'+{{ $data->SASARAN_MUTU_ID }})">Kembalikan</a></li>
 												@elseif((Auth::user()->ACCESS == 'VP SUB DIVISI' && $data->STATUS == '2' || Auth::user()->ACCESS == 'VP PENGENDALIAN KINERJA DAN JAMINAN MUTU' && $data->STATUS == '2'))
-													<li><a href="javascript:;" onclick="Approval({{ $data->SASARAN_MUTU_ID }})">Approve</a></li>
-													<li><a href="javascript:;" onclick="Kembalikan({{ $data->SASARAN_MUTU_ID }})">Kembalikan</a></li>
-												@elseif((Auth::user()->ACCESS == 'ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU' && $data->STATUS == '1'))
+													<li><a href="javascript:;" onclick="Approval('{{ $data->MONTH }}'+'|-|'+{{ $data->YEAR }}+'|-|'+'{{ $data->SUB_DIVISION_NAME }}'+'|-|'+{{ $data->SASARAN_MUTU_ID }})">Approve</a></li>
+													<li><a href="javascript:;" onclick="Kembalikan('{{ $data->MONTH }}'+'|-|'+{{ $data->YEAR }}+'|-|'+'{{ $data->SUB_DIVISION_NAME }}'+'|-|'+{{ $data->SASARAN_MUTU_ID }})">Kembalikan</a></li>
+												@elseif((Auth::user()->ACCESS == 'ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU' && Auth::user()->ORG_ID == $data->ORGANIZATION_STRUCTURE_ID && $data->STATUS == '1'))
 													<li><a href="/txsarmut/edit/form_txsarmut/{{ $data->SASARAN_MUTU_ID }}">Edit</a></li>
 												@elseif((Auth::user()->ACCESS == 'ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU' && $data->STATUS == '3'))
-													<li><a href="javascript:;" onclick="Kembalikan({{ $data->SASARAN_MUTU_ID }})">Kembalikan</a></li>
+												<li><a href="javascript:;" onclick="Kembalikan('{{ $data->MONTH }}'+'|-|'+{{ $data->YEAR }}+'|-|'+'{{ $data->SUB_DIVISION_NAME }}'+'|-|'+{{ $data->SASARAN_MUTU_ID }})">Kembalikan</a></li>
 												@elseif((Auth::user()->ACCESS == 'ADMIN SUB DIVISI' && Auth::user()->ORG_ID == $data->ORGANIZATION_STRUCTURE_ID && ($data->STATUS == '1' || $data->STATUS == '4') || Auth::user()->ACCESS == 'ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU' && Auth::user()->ORG_ID == $data->ORGANIZATION_STRUCTURE_ID && ($data->STATUS == '1' ||  $data->STATUS == '4')))
 													<li><a href="/txsarmut/edit/form_txsarmut/{{ $data->SASARAN_MUTU_ID }}">Edit</a></li>
 												@endif
+												<li><a href="javascript:;" onclick="HistoryView('{{ $data->MONTH }}'+'|-|'+{{ $data->YEAR }}+'|-|'+'{{ $data->SUB_DIVISION_NAME }}'+'|-|'+{{ $data->SASARAN_MUTU_ID }})">History Log</a></li>
 											</ul>
 										</div>
 									</td>
@@ -199,7 +207,7 @@ body{
 		<div style="height:150px; width: 100%;" data-simplebar data-simplebar-auto-hide="true">
 			<div class="col-lg-12" style="text-align: center;">
 				<b>Bulan</b>
-				<input type="hidden" name="subdivisionlisthidden" id="subdivisionlisthidden" value="{{ $month }}" disabled="disabled"><br>
+				<input type="hidden" name="subdivisionlisthidden1" id="subdivisionlisthidden1" value="{{ $month }}" disabled="disabled"><br>
 				<!-- <input type="text" name="bulan" id="bulan" disabled="disabled"><br> -->
 				<select class="form-control select2-list" id="months" name="months[]" style="width: 30% !important;" required="required">
 					<option value="">--Pilih Bulan--</option>
@@ -227,13 +235,40 @@ body{
 	</div>
 </div>
 
+<div id="HistoryModal" uk-modal >
+	<div class="uk-modal-dialog uk-modal-body modal-sm">
+		<form id="HistoryForm" method="post">
+			{{ csrf_field() }}
+			<div style="height:80px" data-simplebar data-simplebar-auto-hide="true">
+				<div>
+					<h2 style="text-align: center;" id="LogLbl"></h2>
+				</div>
+			</div>
+			<table>
+				<thead>
+					<tr>
+						<td>a</td>
+					</tr>
+				</thead>
+			</table>
+			<div uk-grid class="uk-grid-small uk-child-width-1-2 uk-child-width-1-4@m uk-child-width-1-2@s" align="left	">
+				<input type="hidden"  id="HistID" name="HistID">
+			</div>
+			<br>
+			<div class="col-md-12" style="text-align: center;">
+				<button class="uk-button uk-button-default uk-modal-close" type="button">Close</button>
+			</div>
+		</form>		
+	</div>
+</div>
+
 <div id="Approvalmodal" uk-modal >
 		<div class="uk-modal-dialog uk-modal-body modal-sm">
 			<form action="/txsarmut/txsarmut_approve" id="approvalForm" method="post">
 				{{ csrf_field() }}
 				<div style="height:80px" data-simplebar data-simplebar-auto-hide="true">
 					<div>
-						<h2 style="text-align: center;">Konfirmasi Approval</h2>
+						<h2 style="text-align: center;" id="strConfirm"></h2>
 					</div>
 				</div>
 				<div uk-grid class="uk-grid-small uk-child-width-1-2 uk-child-width-1-4@m uk-child-width-1-2@s" align="left	">
@@ -255,7 +290,7 @@ body{
 				{{ csrf_field() }}
 				<div style="height:80px" data-simplebar data-simplebar-auto-hide="true">
 					<div>
-						<h2 style="text-align: center;">Konfirmasi Kembalikan</h2>
+						<h2 style="text-align: center;" id="strConfirm2"></h2>
 					</div>
 				</div>
 				<div uk-grid class="uk-grid-small uk-child-width-1-2 uk-child-width-1-4@m uk-child-width-1-2@s" align="left	">
@@ -310,7 +345,7 @@ body{
 
 <script type="text/javascript">
 	$(document).ready( function () {
-		$('#sarmuttx_list').DataTable();
+		$('#sarmuttx_list').DataTable({"order": []});
 	} );
 
 	function showModal(){
@@ -349,20 +384,46 @@ body{
 	function showModalBulan(){
 		UIkit.modal("#mymodalbulan").show();
 
+	
+	}
+	function HistoryView(id){
+		var pisah = id.split('|-|');
+		var bln = pisah[0];
+		var thn = pisah[1];
+		var subdiv = pisah[2];
+		var id = pisah[3];
+		var Lbl = 'History Log Sasaran Mutu '+subdiv+' Periode Bulan '+bln+' '+thn;
+		$('#HistID').val(id);
+		$('#LogLbl').text(Lbl);
+
+		UIkit.modal("#HistoryModal").show();
 	}
 
 	function Approval(id){
-		var id = id;
+		//alert(id);
+		var pisah = id.split('|-|');
+		var bln = pisah[0];
+		var thn = pisah[1];
+		var subdiv = pisah[2];
+		var id = pisah[3];
+		var confirm = 'Konfirmasi Approval untuk Sasaran Mutu '+subdiv+' Periode Bulan '+bln+' '+thn;
 		$('#id1').val(id);
+		$('#strConfirm').text(confirm);
 
         UIkit.modal("#Approvalmodal").show();
 
 	}
 
 	function Kembalikan(id){
-		var id = id;
+		var pisah = id.split('|-|');
+		var bln = pisah[0];
+		var thn = pisah[1];
+		var subdiv = pisah[2];
+		var id = pisah[3];
+		var confirm = 'Konfirmasi Kembalikan untuk Sasaran Mutu '+subdiv+' Periode Bulan '+bln+' '+thn;
 		$('#id2').val(id);
-		// alert(id);
+		$('#strConfirm2').text(confirm);
+
         UIkit.modal("#kembalikanmodal").show();
 
 	}

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>PT. Pelabuhan Tanjung Priuk</title>
+<title>PT. Pelabuhan Tanjung Priok</title>
 
 <link href="{{ URL::asset('templateslide/assets/css/style.css') }}" rel="stylesheet" type="text/css">
 <link href="{{ URL::asset('templateslide/assets/css/imagehover/imagehover.min.css') }}" rel="stylesheet" type="text/css">
@@ -54,7 +54,7 @@
 				<img src="{{ URL::asset('templateslide/assets/img/logo/ptpwhite.png') }}" class="fl-logo" onclick="location.href = '{{ url('dashboard')}}'">
 				
 				<span class="fl-title-logo">
-					E-Reporting PT. Pelabuhan Tanjung Priok	
+					E-Report PT. Pelabuhan Tanjung Priok	
 				</span>
 
 				<span class="fl-menu-tool">
@@ -121,7 +121,7 @@
 								</td>
 								<td><input type="hidden" name="score[]" id="score[]" value="{{ $data->SCORE }}">{{ $data->SCORE }}</td>
 							</tr>
-							<thead>
+							<!--<thead>
 								<tr class="fl-table-head">
 									<th width="5%"></th>
 									<th width="25%">Sub Divisi Name</th>
@@ -131,18 +131,18 @@
 									<th width="10%"></th>
 									<th width="10%"></th>
 								</tr>
-							</thead>
+							</thead>-->
 						<?php $j = 0 ?>
 						<?php foreach($sub_in_list[$i] as $data){ ?>
 						<input type="hidden" name="sub_ind_id[]" id="sub_ind_id[]" value="{{ $data->DET_TINGKAT_KESEHATAN_PERUSAHAAN_ID}}">
-							<tr>
+							<!--<tr>
 								<td></td>
 								<td>{{ $data->SUB_DIVISION_NAME }}</td>
 								<td>{{ $data->INDICATOR_NAME }}</td>
 								<td>{{ $data->UNIT }}</td>
 								<td><input type="hidden" name="realisasi[]" id="realisasi[]" value="{{ $data->ACTUAL_REALISASI }}">{{ $data->ACTUAL_REALISASI }}</td>
 								<td></td>
-							</tr>
+							</tr>-->
 							<?php $j = $j+1 ?>
 						<?php } ?>
 						<?php $i = $i+1 ?>

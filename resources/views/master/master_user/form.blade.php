@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>PT. Pelabuhan Tanjung Priuk</title>
+	<title>PT. Pelabuhan Tanjung Priok</title>
 
 	<link href="{{ URL::asset('templateslide/assets/css/style.css') }}" rel="stylesheet" type="text/css">
 	<link href="{{ URL::asset('templateslide/assets/css/imagehover/imagehover.min.css') }}" rel="stylesheet" type="text/css">
@@ -53,7 +53,7 @@ body{
 				<img src="{{ URL::asset('templateslide/assets/img/logo/ptpwhite.png') }}" class="fl-logo" onclick="location.href = '{{ url('dashboard')}}'">
 				
 				<span class="fl-title-logo">
-					E-Reporting PT. Pelabuhan Tanjung Priok	
+					E-Report PT. Pelabuhan Tanjung Priok	
 				</span>
 
 				<span class="fl-menu-tool">
@@ -119,6 +119,7 @@ body{
 								<option value="ADMIN PENGENDALIAN KINERJA DAN JAMINAN MUTU">Admin Pengendalian Kinerja dan Jaminan Mutu</option>
 								<option value="DVP PENGENDALIAN KINERJA DAN JAMINAN MUTU">DVP Pengendalian Kinerja dan Jaminan Mutu</option>
 								<option value="VP PENGENDALIAN KINERJA DAN JAMINAN MUTU">VP Pengendalian Kinerja dan Jaminan Mutu</option>
+								<option value="REPORT_ONLY">Untuk Report Saja</option>
 							</select>
 						</div>
 					</div>
@@ -185,6 +186,7 @@ body{
 		function check_username()
         {
           var usernm = $('#nipp').val();
+		  alert("{{ url('/master/check-username') }}");
           $.ajax({
                 type: "GET",
                 url: "{{ url('/master/check-username') }}",

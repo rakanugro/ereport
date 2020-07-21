@@ -23,6 +23,65 @@ use Carbon\Carbon;
 
 class KPIController extends Controller
 {
+    const PATTERN = '/(?:\-?\d+(?:\.?\d+)?[\+\-\*\/])+\-?\d+(?:\.?\d+)?/';
+
+    const PARENTHESIS_DEPTH = 10;
+
+    public function calculate($input){
+        if(strpos($input, '+') != null || strpos($input, '-') != null || strpos($input, '/') != null || strpos($input, '*') != null){
+            //  Remove white spaces and invalid math chars
+            $input = str_replace(',', '.', $input);
+            $input = preg_replace('[^0-9\.\+\-\*\/\(\)]', '', $input);
+
+            //  Calculate each of the parenthesis from the top
+            $i = 0;
+            while(strpos($input, '(') || strpos($input, ')')){
+                $input = preg_replace_callback('/\(([^\(\)]+)\)/', 'self::callback', $input);
+
+                $i++;
+                if($i > self::PARENTHESIS_DEPTH){
+                    break;
+                }
+            }
+
+            //  Calculate the result
+            if(preg_match(self::PATTERN, $input, $match)){
+                return $this->compute($match[0]);
+            }
+            // To handle the special case of expressions surrounded by global parenthesis like "(1+1)"
+            if(is_numeric($input)){
+                return $input;
+            }
+
+            return 0;
+        }
+
+        return $input;
+    }
+
+    private function compute($input){
+        $compute = function($input){
+            if ($input != '') {
+                return $input;
+            }else{
+                return ';';
+            }
+        };
+        //create_function('', 'return '.$input.';');
+
+        return 0 + $compute();
+    }
+
+    private function callback($input){
+        if(is_numeric($input[1])){
+            return $input[1];
+        }
+        elseif(preg_match(self::PATTERN, $input[1], $match)){
+            return $this->compute($match[0]);
+        }
+
+        return 0;
+    }
     /**
      * Create a new controller instance.
      *
@@ -1169,6 +1228,8 @@ class KPIController extends Controller
 
     public function form_input_kpi(Request $request)
     {
+        
+        
         $now            = Carbon::now();
         $items = \DB::table('tm_kpi as a')
                     ->leftJoin('tm_indicator as b', 'a.INDICATOR_ID', '=' , 'b.INDICATOR_ID')
@@ -1320,7 +1381,7 @@ class KPIController extends Controller
                         $realisasirata = 1;
                     }
                     
-                    // print_r($realisasirata);
+                    //dd($realisasirata);
 
                     if($realisasirata == 0){
                         $realisasirata = 1;
@@ -1362,10 +1423,10 @@ class KPIController extends Controller
             }
             // print_r($real_subind_list);
             //
-            $hasil1 = eval('return '.str_replace('x', '*', str_replace(':', '/', $formuladb1)).';');
-            $hasil2 = eval('return '.str_replace('x', '*', str_replace(':', '/', $formuladb2)).';');
-            $hasil3 = eval('return '.str_replace('x', '*', str_replace(':', '/', $formuladb3)).';');
-            $hasil4 = eval('return '.str_replace('x', '*', str_replace(':', '/', $formuladb4)).';');
+            // $hasil1 = eval('return '.str_replace('x', '*', str_replace(':', '/', $formuladb1)).';');
+            // $hasil2 = eval('return '.str_replace('x', '*', str_replace(':', '/', $formuladb2)).';');
+            // $hasil3 = eval('return '.str_replace('x', '*', str_replace(':', '/', $formuladb3)).';');
+            // $hasil4 = eval('return '.str_replace('x', '*', str_replace(':', '/', $formuladb4)).';');
             //dd($hasil4);
             //print_r($formuladb1.'/'.$formuladb2.'/'.$formuladb3.'/'.$formuladb4);
 
@@ -1457,13 +1518,88 @@ class KPIController extends Controller
             array_push($score_ind_list, $scorefix);
             unset($num_split);
         }
+
         $years = array_combine(range(date("Y"), 1960), range(date("Y"), 1960));
         $year = '';
         $months = array("I","II","III","IV");
         $month = '';
-        // dd($score_ind_list);
+
+        $arrpencap = array();
+        $popreal = array();
+        $score1 = array();
+        foreach ($kpi_list as $key1 => $v) {
+            $real2 = preg_replace('/\s+/', '', $v->FORMULA);
+            $dddd = $real2;
+            $dddd2 = $real2;
+            $dddd = preg_replace('/[^\p{L}\p{N}\s]/u', '#', $dddd);
+
+            $ex = explode('#',$dddd);
+            $spc = 0;
+            foreach ($ex as $key => $value) {
+                if ($value != "" && $spc <= 1) {
+                    $result = \DB::select('CALL SP_Count_Realisasion(?,?,?)', [$value,$request->months[0],$request->years[0]]);
+                    if (count($result) > 0) {
+                        $reslt = $result[0]->Realisasi;
+                        $dddd2 = preg_replace("/($value)/i",$reslt,$dddd2);
+
+                    }else {
+                        
+                        $dddd2 = preg_replace("/($value)/i",'0',$dddd2);
+                    }
+                }else {
+                    $spc = $spc + 1;
+                }
+            }
+            $dddd2 = preg_replace("/(:)/i", '/', $dddd2);
+            $dddd2 = preg_replace("/(x)/i", '*', $dddd2);
+            //echo $dddd2."<br>";
+            $p = eval('return '.$dddd2.';');
+            //echo $p."<br>";
+            array_push($popreal,$p);
+            $polar = \DB::table('tm_indicator as a')
+                ->where('a.INDICATOR_ID', '=', $v->INDICATOR_ID);
+            $getpolar1 = $polar->first();
+            
+            
+            if($getpolar1->POLARITAS == '+'){
+                if($target_ind_list[$key1]->TARGET == '0')
+                {
+                    $pencapaianx1 = (1+(($p - $target_ind_list[$key1]->TARGET)/1))*100;
+                }
+                else
+                {
+                    $pencapaianx1 = (1+(($p - $target_ind_list[$key1]->TARGET)/$target_ind_list[$key1]->TARGET))*100;
+                }
+            
+            }else if($getpolar1->POLARITAS == '-'){
+                if($target_ind_list[$key1]->TARGET == '0')
+                {
+                    $pencapaianx1 = (1-(($p-$target_ind_list[$key1]->TARGET)/1))*100;
+                }
+                else
+                {
+                    $pencapaianx1 = (1-(($p-$target_ind_list[$key1]->TARGET)/$target_ind_list[$key1]->TARGET))*100;
+                }
+            }
+            $score11 = 0;
+            if ($pencapaianx1 >= $getpolar1->MIN_SCORE && $pencapaianx1 <= $getpolar1->MAX_SCORE) {
+                $score11 =  $pencapaianx1 / 100 * $target_ind_list[$key1]->BOBOT;
+            }else if ($pencapaianx1 < $getpolar1->MIN_SCORE) {
+                $score11 =  $getpolar1->MIN_SCORE / 100 * $target_ind_list[$key1]->BOBOT;
+            }else if ($pencapaianx1 > $getpolar1->MAX_SCORE) {
+                $score11 =  $getpolar1->MAX_SCORE / 100 * $target_ind_list[$key1]->BOBOT;
+            }
+            array_push($score1,$score11); 
+            array_push($arrpencap,$pencapaianx1);
+            //echo $pencapaianx1."<br>";
+        }
+        
+        //dd($kpi_list,$target_ind_list,$target_subind_list,$arrpencap,$score1);
 
         return view('kpi.input_kpi', [
+            'popreal' => $popreal,
+            'pencap' => $arrpencap,
+            'score1' => $score1,
             'now'                   => $now,
             'kpi_list'     => $kpi_list,
             'kpi'          => '',
@@ -1481,6 +1617,28 @@ class KPIController extends Controller
             'pencapaian_ind_list'     => $pencapaian_ind_list,
             'score_ind_list'     => $score_ind_list,
         ]);
+    }
+
+    public function evalmath($equation)
+    {
+        $result = 0;
+        // sanitize imput
+        $equation = preg_replace("/[^a-z0-9+\-.*\/()%]/","",$equation);
+        // convert alphabet to $variabel 
+        $equation = preg_replace("/([a-z])+/i", "\$$0", $equation); 
+        // convert percentages to decimal
+        $equation = preg_replace("/([+-])([0-9]{1})(%)/","*(1\$1.0\$2)",$equation);
+        $equation = preg_replace("/([+-])([0-9]+)(%)/","*(1\$1.\$2)",$equation);
+        $equation = preg_replace("/([0-9]{1})(%)/",".0\$1",$equation);
+        $equation = preg_replace("/([0-9]+)(%)/",".\$1",$equation);
+        if ( $equation != "" ){
+            $result = @eval("return " . $equation . ";" );
+        }
+        if ($result == null) {
+            throw new Exception("Unable to calculate equation");
+        }
+        return $result;
+        // return $equation;
     }
 
     public function form_detail_txkpi($id)

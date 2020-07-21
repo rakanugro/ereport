@@ -54,12 +54,15 @@
 				<img src="{{ URL::asset('templateslide/assets/img/logo/ptpwhite.png') }}" class="fl-logo" onclick="location.href = '{{ url('dashboard')}}'">
 				
 				<span class="fl-title-logo">
-					E-Reporting PT. Pelabuhan Tanjung Priok	
+					E-Report PT. Pelabuhan Tanjung Priok	
 				</span>
-
 				<span class="fl-menu-tool">
+					<img src="{{ URL::asset('templateslide/assets/img/logo/Logo e-Report.png') }}" class="fl-logo">
 					<input type="button" class="uk-button uk-button-primary fl-button" value="menu" onclick="location.href = '{{ url('dashboard')}}'">
 				</span>
+				<!-- <span class="fl-menu-tool">
+					<input type="button" class="uk-button uk-button-primary fl-button" value="menu" onclick="location.href = '{{ url('dashboard')}}'">
+				</span> -->
 			</div>	
 		</div>
 
@@ -68,7 +71,7 @@
 			<div class="fl-title-page" >
 				<span style="font-size:20px">				
 					<img class="uk-preserve-width uk-border-circle" src="{{ URL::asset('templateslide/assets/img/icon/sopReadMore.png')}}" width="65" alt="">
-					Edit KPI
+					DETAIL KPI
 				</span>
 			</div>
 			
@@ -94,6 +97,7 @@
 							</tr>
 						</thead>
 						<?php $i = 0 ?>
+					@if(!empty($kpi_list))		
 					@foreach($kpi_list as $data)
 						<tbody>
 							<tr>
@@ -118,35 +122,34 @@
 								<td style="font-weight:bold; font-size: 15px;">{{ $score_ind_list[$i] }}</td>
 								<td></td>
 							</tr>
-							<thead>
+							<!--<thead>
 								<tr class="fl-table-head">
 									<th width="5%"></th>
 									<th width="25%">Sub Divisi Name</th>
 									<th width="25%">Sub Indicator Name</th>
 									<th width="10%">Satuan</th>
-									<!-- <th width="10%">Bobot</th> -->
-									<!-- <th width="10%">Target</th> -->
 									<th width="10%">Realisasi</th>
-									<!-- <th width="10%">Pencapaian</th>
-									<th width="10%">Score</th> -->
 									<th width="25%"></th>
 								</tr>
-							</thead>
+							</thead>-->
+							@if(!empty($sub_in))
 							<?php $j = 0 ?>
 						<?php foreach($sub_in[$i] as $data){ ?>
-							<tr>
+							<!--tr>
 								<td></td>
 								<td>{{ $data->SUB_DIVISION_NAME }}</td>
 								<td>{{ $data->INDICATOR_NAME }}</td>
 								<td>{{ $data->UNIT }}</td>
 								<td><input type="hidden" name="subrealisasi[]" id="subrealisasi[]" value="{{ $real_subind_list[$j] }}">{{ $real_subind_list[$j] }}</td>
 								<td></td>
-							</tr>
+							</tr--!>
 							<?php $j = $j+1 ?>
 						<?php } ?>
+						@endif
 						<?php $i = $i+1 ?>
 						</tbody>
 					@endforeach
+					@endif
 
 						<tbody>
 							<tr>

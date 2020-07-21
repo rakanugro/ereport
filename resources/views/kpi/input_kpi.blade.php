@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>PT. Pelabuhan Tanjung Priuk</title>
+<title>PT. Pelabuhan Tanjung Priok</title>
 
 <link href="{{ URL::asset('templateslide/assets/css/style.css') }}" rel="stylesheet" type="text/css">
 <link href="{{ URL::asset('templateslide/assets/css/imagehover/imagehover.min.css') }}" rel="stylesheet" type="text/css">
@@ -54,12 +54,15 @@
 				<img src="{{ URL::asset('templateslide/assets/img/logo/ptpwhite.png') }}" class="fl-logo" onclick="location.href = '{{ url('dashboard')}}'">
 				
 				<span class="fl-title-logo">
-					E-Reporting PT. Pelabuhan Tanjung Priok	
+					E-Report PT. Pelabuhan Tanjung Priok	
 				</span>
-
 				<span class="fl-menu-tool">
+					<img src="{{ URL::asset('templateslide/assets/img/logo/Logo e-Report.png') }}" class="fl-logo">
 					<input type="button" class="uk-button uk-button-primary fl-button" value="menu" onclick="location.href = '{{ url('dashboard')}}'">
 				</span>
+				<!-- <span class="fl-menu-tool">
+					<input type="button" class="uk-button uk-button-primary fl-button" value="menu" onclick="location.href = '{{ url('dashboard')}}'">
+				</span> -->
 			</div>	
 		</div>
 
@@ -85,7 +88,7 @@
 				
 					<table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
 						<thead>
-							<tr class="fl-table-head">
+							<tr class="fl-table-head" style="border-collapse : collapse;">
 								<th width="5%"></th>
 								<th width="25%">Indicator Name</th>
 								<th width="10%">Satuan</th>
@@ -97,8 +100,11 @@
 								<th width="25%"></th>
 							</tr>
 						</thead>
-						<?php $i = 0 ?>
+						<?php $i = 0; $hasilmodif = 0; ?>
+						<?php $j = 0 ?>
+						<?php $j2 = 0 ?>
 					@foreach($kpi_list as $data)
+					<?php $hasilmodif = 0; ?>
 						<input type="hidden" name="indicator_id[]" id="indicator_id[]" value="{{ $data->INDICATOR_ID }}">
 						<input type="hidden" name="kpi_id[]" id="kpi_id[]" value="{{ $data->KPI_ID }}">
 						<tbody>
@@ -113,15 +119,20 @@
 								<td></td>
 								<td></td>
 							</tr>
+						
+						<?php foreach($sub_in[$i] as $key => $data){ ?>
+							<?php $hasilmodif = $hasilmodif + $real_subind_list[$j2]?>
+							<?php $j2 = $j2+1 ?>
+						<?php } ?>
 							<tr>
 								<td><img class="uk-preserve-width uk-border-circle" src="templateslide/assets/img/icon/i1.png" width="45" alt=""></td>
 								<td style="font-weight:bold; font-size: 15px; text-transform: uppercase;">{{ $data->INDICATOR_NAME }}</td>
 								<td style="font-weight:bold; font-size: 15px;">{{ $data->UNIT }}</td>
 								<td style="font-weight:bold; font-size: 15px;">{{ $target_ind_list[$i] <> null ? $target_ind_list[$i]->BOBOT : 0 }}</td>
 								<td style="font-weight:bold; font-size: 15px;">{{ $target_ind_list[$i] <> null ? $target_ind_list[$i]->TARGET : 0 }}</td>
-								<td style="font-weight:bold; font-size: 15px;"><input type="hidden" name="realisasi[]" id="realisasi[]" value="{{ $hasil[$i] }}">{{ $hasil[$i] }}</td>
-								<td style="font-weight:bold; font-size: 15px;">{{ $pencapaian_ind_list[$i] }}</td>
-								<td style="font-weight:bold; font-size: 15px;">{{ $score_ind_list[$i] }}</td>
+								<td style="font-weight:bold; font-size: 15px;"><input type="hidden" name="realisasi[]" id="realisasi[]" value="{{ $hasil[$i] }}">{{ round($popreal[$i],2) }}</td>
+								<td style="font-weight:bold; font-size: 15px;">{{ round($pencap[$i],2) }}</td>
+								<td style="font-weight:bold; font-size: 15px;">{{ round($score1[$i],2) }}</td>
 								<td></td>
 							</tr>
 							<thead>
@@ -130,17 +141,13 @@
 									<th width="25%">Sub Divisi Name</th>
 									<th width="25%">Sub Indicator Name</th>
 									<th width="10%">Satuan</th>
-									<!-- <th width="10%">Bobot</th> -->
-									<!-- <th width="10%">Target</th> -->
 									<th width="10%">Realisasi</th>
-									<!-- <th width="10%">Pencapaian</th>
-									<th width="10%">Score</th> -->
 									<th width="25%"></th>
 								</tr>
 							</thead>
-							<?php $j = 0 ?>
 						<?php foreach($sub_in[$i] as $data){ ?>
 						<input type="hidden" name="sub_ind_id[]" id="sub_ind_id[]" value="{{ $data->INDICATOR_ID }}">
+						<input type="hidden" name="subrealisasi[]" id="subrealisasi[]" value="{{ $real_subind_list[$j] }}">
 							<tr>
 								<td></td>
 								<td>{{ $data->SUB_DIVISION_NAME }}</td>

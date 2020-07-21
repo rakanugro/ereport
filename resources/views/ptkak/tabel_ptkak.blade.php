@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>PT. Pelabuhan Tanjung Priuk</title>
+	<title>PT. Pelabuhan Tanjung Priok</title>
 
 	<link href="{{ URL::asset('templateslide/assets/css/style.css') }}" rel="stylesheet" type="text/css">
 	<link href="{{ URL::asset('templateslide/assets/css/imagehover/imagehover.min.css') }}" rel="stylesheet" type="text/css">
@@ -48,7 +48,7 @@
 				<img src="{{ URL::asset('templateslide/assets/img/logo/ptpwhite.png') }}" class="fl-logo" onclick="location.href = '{{ url('dashboard')}}'">
 				
 				<span class="fl-title-logo">
-					E-Reporting PT. Pelabuhan Tanjung Priuk	
+					E-Report PT. Pelabuhan Tanjung Priok	
 				</span>
 
 				<span class="fl-menu-tool">
@@ -109,9 +109,11 @@
 									<td>{{ $data->T_SUB_DIVISION_NAME }}</td>
 									<td>
 										@if($data->VERIFIED_STATUS_1 == '0')
-										<span style="color:green">OPEN</span>
-										@else
+										<span style="color:green">CREATE</span>
+										@elseif($data->VERIFIED_STATUS_1 == '1')
 										<span style="color:red">CLOSE</span>
+										@else
+										<span style="color:red">ANSWER</span>
 										@endif
 									</td>
 									<td>
@@ -129,6 +131,13 @@
 												<ul class="uk-nav uk-dropdown-nav">
 													<li><a href="/ptkak/master_form_preview/{{ $data->PTKAK_ID }}">Detail</a></li>
 													<li><a href="/ptkakclose/close/{{ $data->PTKAK_ID }}">Close PTKAK</a></li>
+												</ul>
+											</div>
+											@elseif(Auth::user()->ACCESS == $data->TO_AUDITAN)
+											<div uk-dropdown="mode:click">
+												<ul class="uk-nav uk-dropdown-nav">
+													<li><a href="/ptkak/master_form_edit/{{ $data->PTKAK_ID }}">Edit</a></li>
+													<li><a href="/ptkak/master_form_preview/{{ $data->PTKAK_ID }}">Detail</a></li>
 												</ul>
 											</div>
 											@else

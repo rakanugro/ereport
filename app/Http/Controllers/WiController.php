@@ -13,7 +13,7 @@ class WiController extends Controller
         $ext = $file->getClientOriginalExtension();
         $nama_file = time()."_".$file->getClientOriginalName();
         $tujuan_upload = 'sop';
-        $file->move($tujuan_upload, $nama_file);
+        // $file->move($tujuan_upload, $nama_file);
         
         $simpan = new Wi_File();
         $simpan->FILE_NAME = $nama_file;

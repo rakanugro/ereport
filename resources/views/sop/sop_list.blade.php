@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>PT. Pelabuhan Tanjung Priuk</title>
+	<title>PT. Pelabuhan Tanjung Priok</title>
 
 	<link href="{{ URL::asset('templateslide/assets/css/style.css') }}" rel="stylesheet" type="text/css">
 	<link href="{{ URL::asset('templateslide/assets/css/imagehover/imagehover.min.css') }}" rel="stylesheet" type="text/css">
@@ -29,6 +29,7 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script>
 	<script src="{{ URL::asset('templateslide/assets/js/datatableptkak/jquery.dataTables.min.js') }}"></script>
+
 </head>
 
 <style>
@@ -52,11 +53,14 @@ body{
 				<img src="{{ URL::asset('templateslide/assets/img/logo/ptpwhite.png') }}" class="fl-logo" onclick="location.href = '{{ url('dashboard')}}'">
 				
 				<span class="fl-title-logo">
-					E-Reporting PT. Pelabuhan Tanjung Priok	
+					E-Report PT. Pelabuhan Tanjung Priok	
 				</span>
 
 				<span class="fl-menu-tool">
+					<img src="{{ URL::asset('templateslide/assets/img/logo/Logo e-Report.png') }}" class="fl-logo">
+					<a href="listexportdata"><button style="background-color : #FFDAB9 !important;" class="uk-button uk-button fl-button" type="button">Report</button></a>
 					<input type="button" class="uk-button uk-button-primary fl-button" value="menu" onclick="location.href = '{{ url('dashboard')}}'">
+					<a href="logout"><button class="uk-button uk-button-danger fl-button" type="button">Logout</button></a>
 				</span>
 			</div>	
 		</div>
@@ -74,90 +78,90 @@ body{
 				@endif
 			</span>
 		</div>
-
 		<div class="fl-table">
-				<div class="uk-overflow-auto">
-					<table class="uk-table uk-table-hover uk-table-middle uk-table-divider" id="tablesop">
-						<thead>
-							<tr class="fl-table-head">
-								<th width="5%"></th>							
-								<th width="20%">Sub Divisi</th>
-								<th width="20%">Sub Divisi</th>
-								<th width="20%">Name</th>
-								<th width="20%">Alasan</th>
-								<th width="20%">Action</th>
-							</tr>
-						</thead>
-						<tbody>
-								<div uk-dropdown="mode: click">
-									<ul class="uk-nav uk-dropdown-nav">
-										<li><a href="#">Divisi</a></li>
-										<li><a href="#">Nama</a></li>
-										<li><a href="#">Nilai</a></li>
-									</ul>
-								</div>
-						@foreach($sop_list as $data)
-								<tr>
-									<td><img class="uk-preserve-width uk-border-circle" src="{{ URL::asset('templateslide/assets/img/icon/i1.png') }}" width="45" alt=""></td>
-									<td>{{ $data->Sub_Divisi_1 }}</td>
-									<td>{{ $data->Sub_Divisi_2 }}</td>
-									<td>{{ $data->SOP_Code_Name }}</td>
-									<td>{{ $data->Alasan}}</td>
-									<td>
-										<button class="uk-button uk-button-default fl-button" type="button">Action </button>
-									<div uk-dropdown="mode: click">
-										<ul class="uk-nav uk-dropdown-nav">
-											<li><a href="/sop_index/{{$data->header_sop_id}}">SOP</a></li>
-											<li><a href="/wi/{{$data->header_sop_id}}">WI</a></li>
-											<li><a href="/form_file/{{$data->header_sop_id}}">Form File</a></li>
-										</ul>
-									</div>
-									</td>
-								</tr>
-						@endforeach
-						</tbody>
-					</table>
-				</div>	
-			</div>
+			<div class="m-portlet">
+				<div class="m-portlet__body">
+					<div id="m_tree_2" class="tree-demo">
+						<ul>	
+							<?php $iddiv1 =  '';?>
+							<?php $iddiv2 =  '';?>
+							<?php $idsop1 =  '';?>
+							<?php $idsop2 =  '';?>
+							@foreach($division as $item)
+							<li>
+								<a>{{ $item->DIVISION_NAME }}</a>
+								<ul>
+									@foreach($subdiv1 as $items)
+										@if($item->DIVISION_ID == $items->DIVISION_ID)
+											@if($iddiv1 != $items->SUB_DIVISION_ID)
+												<?php $iddiv1 =  $items->DIVISION_ID;?>
+												<li>
+													<a>{{ $items->SUB_DIVISION_NAME }}</a>
+													<ul>
+														@foreach($sop as $sopitem)
+															@if($sopitem->SUB_DIVISION_ID == $items->SUB_DIVISION_ID)
+																@if($idsop1 != $sopitem->SOP_ID)
+																	<?php $idsop1 =  $sopitem->SOP_ID;?>
+																	<li>
+																		<a href="/sop/edit/{{$sopitem->SOP_ID}}">{{ $sopitem->SOP_NAME }}</a>
+																	</li>
+																@endif
+															@endif
+														@endforeach
+													</ul>
+												</li>
+											@endif
+										@endif
+									@endforeach
+								</ul>
+							</li>
+							@endforeach
 
-		</div>	
-	</div>
-
-
-	<!-- This is the modal -->
-	<div id="mymodal" uk-modal >
-		<div class="uk-modal-dialog uk-modal-body">
-			<div>
-				<div uk-grid class="uk-grid-small uk-child-width-1-2 uk-child-width-1-4@m uk-child-width-1-2@s" align="left	">
-					<div>
-						<b>Nama</b>
-						<input class="uk-input" type="text" placeholder="Masukan Nama">
+							@foreach($branch as $item2)
+							<li>
+							<a>{{ $item2->BRANCH_OFFICE_NAME }}</a>
+								<ul>
+									@foreach($subdiv2 as $items2)
+										@if($item2->BRANCH_OFFICE_ID == $items2->BRANCH_OFFICE_ID)
+											@if($iddiv2 != $items2->SUB_DIVISION_ID)
+												<?php $iddiv2 =  $items2->BRANCH_OFFICE_ID;?>
+												<li>
+													<a>{{ $items2->SUB_DIVISION_NAME }}</a>
+													<ul>
+														@foreach($sop as $sopitem)
+															@if($sopitem->SUB_DIVISION_ID == $items2->SUB_DIVISION_ID)
+																@if($idsop2 != $sopitem->SOP_ID)
+																	<?php $idsop2 =  $sopitem->SOP_ID;?>
+																	<li>
+																		<a href="/sop/edit/{{$sopitem->SOP_ID}}">>{{ $sopitem->SOP_NAME }}</a>
+																	</li>
+																@endif
+															@endif
+														@endforeach
+													</ul>
+												</li>
+											@endif
+										@endif
+									@endforeach
+								</ul>
+							</li>
+							@endforeach
+						</ul>
 					</div>
-					
-					<div>
-						<b>Divisi</b>
- 						<input class="uk-input" type="text" placeholder="Masukan Divisi">
-					</div>
-
-					<div>
-						<b>Sub Divisi</b>
-						<input class="uk-input" type="text" placeholder="Masukan Sub Divisi">
-					</div>
-					<div style="padding-top:10px" align="right">
-							<button class="uk-button uk-button-primary fl-button" type="button">Search</button>			
-						</div>			
 				</div>
 			</div>
+		</div>
 	</div>
-
 </body>
 </html>
-
 <script>
 	function showModal(){
 		UIkit.modal("#mymodal").show();
 	}
-	$(document).ready( function () {
-		$('#tablesop').DataTable();
-	} );
 </script>
+<script src="{{ URL::asset('metronic2/assets/vendors/base/vendors.bundle.js')}}" type="text/javascript"></script>
+<script src="{{ URL::asset('metronic2/assets/demo/default/base/scripts.bundle.js')}}" type="text/javascript"></script>
+<!--end::Base Scripts -->   
+<!--begin::Page Resources -->
+<script src="{{ URL::asset('metronic2/assets/demo/default/custom/components/base/treeview.js')}}" type="text/javascript"></script>
+
